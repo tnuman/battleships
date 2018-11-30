@@ -2,14 +2,17 @@
 <html>
     <head>
         <title>Battleships - in-game</title>
+        <script src="javascripts/jquery-3.3.1.min.js"></script>
+        <script src="./javascripts/game.js"></script>
     </head>
     
     <body>
     <main>
         <section id="left">
-            <div>Time PLayed:</div>
-            <div id="timeDisplay">TIME</div>
-            <div id="turnDisplay">TURN</div>
+            <div id="timeDisplay">
+                <p>Time Played:</p>
+            </div>
+            <div id="turnDisplay"></div>
             <!-- (optional) quit button, maybe better to remove it-->
             <form action="Splashscreen.html" method="GET">
                 <button type="submit">QUIT</button>
@@ -18,11 +21,22 @@
         </section>
 
         <section id="right">
-            <div id= "instruction"></div>
-            <div id="gameboardYou"></div>
-            <div id="shipsLeftYou"></div>
-            <div id="gameboardOpp"></div>
-            <div id="shipsLeftOpp"></div>                                                                 
+            <div id="instruction"></div>
+            <div id="you" style ="float:left">
+                <h1 style="text-align:center">Your sea</h1>
+                <div id="gameboardYou"></div>
+                <div id="shipsLeftYou">
+                    <span>Your ships left:</span>
+                </div>
+            </div>
+            <div id = "opponent" style = "float:right">
+                <h1 style="text-align:center">Opponents sea</h1>
+                <div id="gameboardOpp"></div>
+                <div id="shipsLeftOpp">
+                    <span>Opponents ships left:</span>
+                </div> 
+            </div>
+                                                                            
         </section>
                 
     </main>
