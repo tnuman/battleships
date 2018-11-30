@@ -4,14 +4,14 @@
         <title>Battleships - in-game</title>
     </head>
     
-    <!-- je kunt header en footer ook weghalen als je ze niet nodig hebt-->
     <body>
     <main>
         <section id="left">
             <div>Time PLayed:</div>
             <div id="timeDisplay">TIME</div>
             <div id="turnDisplay">TURN</div>
-            <form action="https://www.kanikeenkortebroekaan.nl" method="GET">
+            <!-- (optional) quit button, maybe better to remove it-->
+            <form action="Splashscreen.html" method="GET">
                 <button type="submit">QUIT</button>
             </form>
             <img src="images/bombarded battleship.png">
@@ -19,14 +19,10 @@
 
         <section id="right">
             <div id= "instruction"></div>
-            <section id="you">
-                <div id="gameboardYou"></div>
-                <div id="shipsLeftYou"></div>
-            </section>
-            <section id="opponent">
-                <div id="gameboardOpp"></div>
-                <div id="shipsLeftOpp"></div>
-            </section>                                                                  
+            <div id="gameboardYou"></div>
+            <div id="shipsLeftYou"></div>
+            <div id="gameboardOpp"></div>
+            <div id="shipsLeftOpp"></div>                                                                 
         </section>
                 
     </main>
