@@ -29,7 +29,7 @@ var main = function() {
     });
 }
 
-// wherefore is this?
+// Executes main when the JavaScript file has been loaded
 $(document).ready(main);
 
 // represents a game

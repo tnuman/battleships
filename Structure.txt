@@ -1,0 +1,18 @@
+Ik denk dat het handig is dat we als structuur MVC (Model View Controller) gaan gebruiken. 
+Verdeelt de implementation in wat meer hapklare brokken en helpt met code maintainability:
+
+    -- View
+Alle UI elementen: Biede boards, instructies, turn indicator, etc.
+
+    -- Controller
+Luistert naar events bij de view.
+Handlet de inputs die via de view binnenkomen door de data door te passen naar de model.
+Update de view wanneer dit nodig is
+- Dit kan afhankelijk zijn van de output van de model (model zegt of het raak, mis of gezonken is bijv.), 
+- maar ook onafhankelijk (Turn indicator moet altijd zsm worden geupdate en weergegeven)
+
+    -- Model
+Bevat alle regels en data van het spel in de vorm van objecten en functies.
+Heeft op geen manier direct contact met de view, alles gaat via de Controller
+Krijgt data van de Controller, verwerkt dit en geeft data terug aan de controller.
+UI onafhankelijk!!
