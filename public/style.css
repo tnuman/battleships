@@ -1,9 +1,20 @@
-td.empty {
-    background-color: white;
+td {
+    width: 40px;
+    height: 40px;
+    border: solid grey; 
 }
 
-td.ship {
-    background-color: rgb(143, 141, 141);
+td.empty {
+    background-color: white;
+    cursor: pointer;
+}
+
+div#gameboardYou td.ship {
+    background-color: rgb(161, 159, 159);
+}
+
+div#gameboardOpp td.ship {
+    background-color: white;
 }
 
 td.miss {
@@ -16,4 +27,8 @@ td.hit {
 
 td.sunk {
     background-color: black;
+}
+
+div#gameboardOpp td.empty {
+    cursor: url(images/Crosshairs\ 1.cur), pointer;
 }

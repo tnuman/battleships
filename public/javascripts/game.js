@@ -4,8 +4,9 @@ var main = function() {
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
     createTable(document.getElementById("gameboardOpp"), "O");
-    var you = new player;
+    var you = new player("you");
     var opponent = you;
+    opponent.name = "opponent";
     
     // tested manipulating text
     $("#right span").text("5");
@@ -57,17 +58,6 @@ var game = function(gameID) {
     this.id = gameID;                    
     this.gameState = "0 JOINT";
 }
-
-/* idk in hoeverre we deze class nodig hebben. Is misschien alleen nodig 
-voor het plaatsen van de schepen, alle benodigde informatie kan denk ik 
-bij worden gehouden met de gameboard array van de player objects
-*/
-var ship = function(length) {
-    this.length = length;
-    this.isPlaced = false;
-}
-
-
 
 function endGame() {
     setTimeout(function(){ alert("You won!!!!"); }, 500);

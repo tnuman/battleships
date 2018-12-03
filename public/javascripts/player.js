@@ -1,5 +1,7 @@
 // represents a player of this game
-var player = function()  {
+var player = function(name)  {
+    this.name = name;
+    
     // represents the number of hits on the player's ships
     this.hitCount = 0;
     
@@ -22,22 +24,23 @@ var player = function()  {
     [0,0,0,0,0,0,0,0,0,0]
     ]
 
+    this.ships = [new ship(1), new ship(2), new ship(3), new ship(4), new ship(5)]
+
     // place a ship on the board, given it's leftmost coordinate and length
     this.placeShip = function (row, col, length) {
         if(this.shipsPlaced <= 4) {
             for(let i = 0; i < length; i++) {
-                if (((parseInt(col) + i) > 10) || this.board[row][parseInt(col)+i] >= 1) {
-                    console.log(false);
+                if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col)+i] >= 1) {
                     return false;
                 }
             }
             for(let x = 0; x < length; x++) {
-                console.log("setting to 1");
-                this.board[row][parseInt(col) + x ] = 1;
-                //console.log(this.board[row][col + x]);                
+                this.board[row][parseInt(col) + x] = 1;
+                var aShip = this.ships[length - 1];
+                aShip.addCell(row, (parseInt(col) + x));                
             }
             this.shipsPlaced++;
-            console.log(this.board);
+            //console.log(this.board);
             return true;
         }
         
@@ -45,16 +48,33 @@ var player = function()  {
 
     // update the status of a cell, given it's row and col value
     this.updateCellStatus = function (row, col) {
-        // Check if the cell is available
-        if (this.board[row][col] >= 2){
-            // if not, say this to the user
-            console.log ("Cell already chosen. Please click on another cell");
-        } else {
-            // if still available, update from empty (0) or undamaged ship (1) to respectively miss (2) and hit (3)
-            this.board[row][col] += 2;
-            // if it was a hit, increment the hitcount
+        // Update to sunken part of a ship if this function is called with a cell with status 3
+        if (this.board[row][col] === 3){
+            this.board[row][col]++;
+            updateOppTable(this);
+        }
+
+        //Update from empty (0) or undamaged ship (1) to respectively miss (2) and hit (3)
+        if (this.board[row][col] <= 1) {
+        this.board[row][col] += 2;
+        // if it was a hit, increment the hitcount
             if (this.board[row][col] === 3) {
                 this.hitCount++;
+                
+                // check is the ship is sunken
+                for (let i = 0; i < this.ships.length; i++) {
+                    var aShip = this.ships[i];
+                    if (aShip.covers(row, col)) {
+                        aShip.hits++;
+                        console.log(aShip);
+                        if (aShip.isSunk() === true){
+                            for (let j = 0; j < aShip.length; j++) {
+                                var cell = aShip.coveredCells[j].split(",");       // an array with row and col value
+                                this.updateCellStatus(cell[0], cell[1]);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -64,9 +84,7 @@ var player = function()  {
         return this.board[row][col];
     }
 
-    
-
-    // returns true if the opponent sank all ships of the player
+        // returns true if the opponent sank all ships of the player
     this.hasLost = function () {
         // when there are 15 hits on the players ships (total length of all ships), the player has lost
         return this.hitCount === 15;
