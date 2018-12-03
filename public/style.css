@@ -29,6 +29,6 @@ td.sunk {
     background-color: black;
 }
 
-div#gameboardOpp td.empty {
+div#gameboardOpp td.empty, div#gameboardOpp td.ship {
     cursor: url(images/Crosshairs\ 1.cur), pointer;
 }

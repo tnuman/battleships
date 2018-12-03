@@ -51,7 +51,6 @@ var player = function(name)  {
         // Update to sunken part of a ship if this function is called with a cell with status 3
         if (this.board[row][col] === 3){
             this.board[row][col]++;
-            updateOppTable(this);
         }
 
         //Update from empty (0) or undamaged ship (1) to respectively miss (2) and hit (3)

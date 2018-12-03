@@ -26,7 +26,6 @@ var main = function() {
     })
     
     
-    // test eventhandler: when you click on a cell and it is available, you can see which cell you clicked in the console
     $("#opponent #gameboardOpp td").on("click", function() {
         // this represents the td (cell) that is clicked. It's a 'jQuery' object, so we'll have to use attr instead of getAtrribute
         var $cell = $(this);
@@ -36,9 +35,9 @@ var main = function() {
             console.log("row: " + $cell.attr("row") + " col: " + $cell.attr("col"));
             // update status of this cell in the array
             opponent.updateCellStatus($cell.attr("row"), $cell.attr("col"));
-            // updat class of cell in table for color
-            updateTableCell($cell, opponent);
-            if(opponent.hasLost()) {
+            // update class of cell in table for color
+            updateOppTable(opponent);
+            if (opponent.hasLost()) {
                 endGame();
             }
         } else {
