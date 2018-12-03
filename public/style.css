@@ -1,0 +1,19 @@
+td.empty {
+    background-color: white;
+}
+
+td.ship {
+    background-color: rgb(143, 141, 141);
+}
+
+td.miss {
+    background-color: blue;
+}
+
+td.hit {
+    background-color: red;
+}
+
+td.sunk {
+    background-color: black;
+}

@@ -2,14 +2,28 @@ var main = function() {
     "use strict";
 
     // create tables that represent the gameboards
-    createTable(document.getElementById("gameboardYou"));
-    createTable(document.getElementById("gameboardOpp"));
+    createTable(document.getElementById("gameboardYou"), "Y");
+    createTable(document.getElementById("gameboardOpp"), "O");
     var you = new player;
-    var opponent = new player;
+    var opponent = you;
     
     // tested manipulating text
     $("#right span").text("5");
-    $("#instruction").text("Place your ships somewhere in your sea");
+    $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+    
+    $("#you #gameboardYou td").on("click", function() {
+        // this represents the td (cell) that is clicked. It's a 'jQuery' object, so we'll have to use attr instead of getAtrribute
+        var $cell = $(this);
+
+        you.placeShip($cell.attr("row"), $cell.attr("col"), you.shipsPlaced +1);
+        updateYourTable(you);
+        if(you.shipsPlaced + 1 > 5) {
+            $("#instruction").text("Wait for the opponent to place his ships");
+        } else {
+            $("#instruction").text("Place your ship of length " + String(you.shipsPlaced + 1) + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+        }   
+    })
+    
     
     // test eventhandler: when you click on a cell and it is available, you can see which cell you clicked in the console
     $("#opponent #gameboardOpp td").on("click", function() {
@@ -22,11 +36,15 @@ var main = function() {
             // update status of this cell in the array
             opponent.updateCellStatus($cell.attr("row"), $cell.attr("col"));
             // updat class of cell in table for color
-            $cell.attr("class", opponent.getCellStatus($cell.attr("row"), $cell.attr("col")));
+            updateTableCell($cell, opponent);
+            if(opponent.hasLost()) {
+                endGame();
+            }
         } else {
             console.log("Already clicked this cell");
         }
     });
+
 }
 
 // Executes main when the JavaScript file has been loaded
@@ -40,67 +58,6 @@ var game = function(gameID) {
     this.gameState = "0 JOINT";
 }
 
-// represents a player of this game
-var player = function()  {
-    /* 10x10 array that represents the status of each cell
-    0 = empt7, 1 = undamaged ship, 2 = miss, 3 = hit, 4 = part of sunken ship  
-    */
-    this.board = [
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0]
-    ]
-
-    // place a ship on the board, given it's leftmost coordinate and length
-    this.placeShip = function (row, col, length) {
-        for(let i = 0; i < length; i++) {
-            if (this.board[row][col+i] >= 1) {
-                return false;
-            }
-        }
-        for(let i = 0; i < length; i++) {
-            this.board[row][col+i] == 1;
-        }
-    }
-
-    // update the status of a cell, given it's row and col value
-    this.updateCellStatus = function (row, col) {
-        // Check if the cell is available
-        if (this.board[row][col] >= 2){
-            // if not, say this to the user
-            console.log ("Cell already chosen. Please click on another cell");
-        } else {
-            // if still available, update from empty (0) or undamaged ship (1) to respectively miss (2) and hit (3)
-            this.board[row][col] += 2;
-            // if it was a hit, increment the hitcount
-            if (this.board[row][col] === 3) {
-                hitCount++;
-            }
-        }
-    }
-
-    // get the status of a cell, given it's row and col value
-    this.getCellStatus = function (row, col) {
-        return this.board[row][col];
-    }
-
-    // represents the number of hits on the player's ships
-    this.hitCount = 0;
-
-    // returns true if the opponent sank all ships of the player
-    this.hasLost = function () {
-        // when there are 17 hits on the players ships (total length of all ships), the player has lost
-        return hitCount === 17;
-    }
-}
-
 /* idk in hoeverre we deze class nodig hebben. Is misschien alleen nodig 
 voor het plaatsen van de schepen, alle benodigde informatie kan denk ik 
 bij worden gehouden met de gameboard array van de player objects
@@ -110,35 +67,36 @@ var ship = function(length) {
     this.isPlaced = false;
 }
 
-// creates a table that represents the gameboard
-function createTable(destination) {
-    var tbl = document.createElement("table");
-    var tblbody = document.createElement("tbody");
-    
-    // make the grid rows
-    for(let y = 0; y < 10; y++) {
-        var row = document.createElement("tr");                                                
-        // make the grid columns
-        for(let x = 0; x < 10; x++) {
-            var cell = document.createElement("td");
-            cell.setAttribute("class", 0);
-            /* heb ze row and col genoemd, want y en x waren een beetje verwarrend 
-            (hoe meer naar beneden hoe groter de y werd, (y,x) i.p.v. (x,y) omgewisseld etc.)
-            haal comment maar weg als je gelezen hebt*/
-            cell.setAttribute("row", y);
-            cell.setAttribute("col", x);
-
-            cell.style.width = '40px';
-            cell.style.height = '40px';
-            cell.style.border = 'solid gray';                        
-            // append the cell to the row
-            row.appendChild(cell);
-        }
-        // append the row to the table
-        tblbody.appendChild(row);
+function updateTableCell(cell, player) {
+    var status = player.getCellStatus(cell.attr("row"), cell.attr("col"));
+    console.log(player.getCellStatus(cell.attr("row"), cell.attr("col")));
+    if(status === 0) {
+        cell.attr("class", "empty");
     }
-    
-    // append the tblbody to the table and the table to the destination
-    tbl.appendChild(tblbody);
-    destination.appendChild(tbl);
+    if(status === 1) {
+        cell.attr("class", "ship");
+    }
+    if(status === 2) {
+        cell.attr("class", "miss");
+    }
+    if(status === 3) {
+        cell.attr("class", "hit");
+    }
+    if(status === 4) {
+        cell.attr("class", "sunk");
+    }
+}
+
+function updateYourTable(player) {
+    for(let y = 0; y < 10; y++) {
+        for(let x = 0; x < 10; x++) {
+            // updateTableCell(document.getElementById(prefix + String(y) + String(x)), player);
+            var element = "#Y" + String(y) + String(x);
+            updateTableCell($(element), player)
+        }
+    }
+}
+
+function endGame() {
+    setTimeout(function(){ alert("You won!!!!"); }, 500);
 }
