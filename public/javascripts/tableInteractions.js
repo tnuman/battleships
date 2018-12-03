@@ -31,3 +31,33 @@ function createTable(destination, player) {
     tbl.appendChild(tblbody);
     destination.appendChild(tbl);
 }
+
+function updateTableCell(cell, player) {
+    var status = player.getCellStatus(cell.attr("row"), cell.attr("col"));
+    console.log(player.getCellStatus(cell.attr("row"), cell.attr("col")));
+    if(status === 0) {
+        cell.attr("class", "empty");
+    }
+    if(status === 1) {
+        cell.attr("class", "ship");
+    }
+    if(status === 2) {
+        cell.attr("class", "miss");
+    }
+    if(status === 3) {
+        cell.attr("class", "hit");
+    }
+    if(status === 4) {
+        cell.attr("class", "sunk");
+    }
+}
+
+function updateYourTable(player) {
+    for(let y = 0; y < 10; y++) {
+        for(let x = 0; x < 10; x++) {
+            // updateTableCell(document.getElementById(prefix + String(y) + String(x)), player);
+            var element = "#Y" + String(y) + String(x);
+            updateTableCell($(element), player)
+        }
+    }    
+}
