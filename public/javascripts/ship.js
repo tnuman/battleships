@@ -18,7 +18,7 @@ var ship = function (length) {
             return false;
         }
     }
-    this.isSunk = function() {
+    this.hasSunk = function() {
         return this.length === this.hits;
     }
 }

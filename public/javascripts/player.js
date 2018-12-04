@@ -1,6 +1,5 @@
 // represents a player of this game
-var player = function(name)  {
-    this.name = name;
+var player = function()  {
     
     // represents the number of hits on the player's ships
     this.hitCount = 0;
@@ -24,9 +23,21 @@ var player = function(name)  {
     [0,0,0,0,0,0,0,0,0,0]
     ]
 
+    // ships of the player
     this.ships = [new ship(1), new ship(2), new ship(3), new ship(4), new ship(5)]
 
-    // place a ship on the board, given it's leftmost coordinate and length
+    // return the number of ships that haven't sunken yet
+    this.shipsLeft = function() {
+        var count = 0;
+        for (let i = 0; i < this.ships.length; i++) {
+            if (!(this.ships[i].hasSunk())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // allows to place a ship on the board, given it's leftmost coordinate and length
     this.placeShip = function (row, col, length) {
         if(this.shipsPlaced <= 4) {
             for(let i = 0; i < length; i++) {
@@ -46,12 +57,8 @@ var player = function(name)  {
         
     }
 
-    // update the status of a cell, given it's row and col value
+    // allows to update the status of a cell, given it's row and col value
     this.updateCellStatus = function (row, col) {
-        // Update to sunken part of a ship if this function is called with a cell with status 3
-        if (this.board[row][col] === 3){
-            this.board[row][col]++;
-        }
 
         //Update from empty (0) or undamaged ship (1) to respectively miss (2) and hit (3)
         if (this.board[row][col] <= 1) {
@@ -65,16 +72,19 @@ var player = function(name)  {
                     var aShip = this.ships[i];
                     if (aShip.covers(row, col)) {
                         aShip.hits++;
-                        console.log(aShip);
-                        if (aShip.isSunk() === true){
+                        //console.log(aShip);
+                        if (aShip.hasSunk() === true){
                             for (let j = 0; j < aShip.length; j++) {
                                 var cell = aShip.coveredCells[j].split(",");       // an array with row and col value
-                                this.updateCellStatus(cell[0], cell[1]);
+                                this.board[cell[0]][cell[1]] = 4;
                             }
                         }
                     }
                 }
             }
+            return true;
+        } else {
+            return false;
         }
     }
 

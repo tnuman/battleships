@@ -4,60 +4,54 @@ var main = function() {
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
     createTable(document.getElementById("gameboardOpp"), "O");
-    var you = new player("you");
+    var you = new player();
     var opponent = you;
-    opponent.name = "opponent";
     
-    // tested manipulating text
-    $("#right span").text("5");
+    // manipulating instruction text
     $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
     
+    // placing your ships
     $("#you #gameboardYou td").on("click", function() {
         // this represents the td (cell) that is clicked. It's a 'jQuery' object, so we'll have to use attr instead of getAtrribute
         var $cell = $(this);
-
+        // place the ship in the board of the player object
         you.placeShip($cell.attr("row"), $cell.attr("col"), you.shipsPlaced +1);
+        // update classes table for color
         updateYourTable(you);
-        if(you.shipsPlaced + 1 > 5) {
-            $("#instruction").text("Wait for the opponent to place his ships");
+        //manipulating instruction text
+        if(you.shipsPlaced + 1 <= 5) {
+            $("#instruction").text("Place your ship of length " + String(you.shipsPlaced + 1)
+            + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
         } else {
-            $("#instruction").text("Place your ship of length " + String(you.shipsPlaced + 1) + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+            $("#instruction").text("Wait for the opponent to place his ships");
         }   
     })
     
-    
+    // guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
+        // actually this doesn't belong here, but because we don't work with game statuses yet it's fine
+        $("#instruction").text("Click somewhere in your opponents sea to shoot!");
+
         // this represents the td (cell) that is clicked. It's a 'jQuery' object, so we'll have to use attr instead of getAtrribute
         var $cell = $(this);
-        
-        // check whether the cell is available
-        if (opponent.getCellStatus($cell.attr("row"), $cell.attr("col")) <= 1) {
-            console.log("row: " + $cell.attr("row") + " col: " + $cell.attr("col"));
-            // update status of this cell in the array
-            opponent.updateCellStatus($cell.attr("row"), $cell.attr("col"));
-            // update class of cell in table for color
-            updateOppTable(opponent);
-            if (opponent.hasLost()) {
-                endGame();
-            }
-        } else {
-            console.log("Already clicked this cell");
-        }
+        // update status of this cell in the array
+        opponent.updateCellStatus($cell.attr("row"), $cell.attr("col"));
+        // update classes table for color
+        updateOppTable(opponent);
+        // update ships left counter
+        $("#shipsLeftOpp span").text(opponent.shipsLeft());
+        // check if the game is over
+        if (opponent.hasLost()) {
+            endGame();
+        } 
     });
 
 }
-
-// Executes main when the JavaScript file has been loaded
+// executes main when the JavaScript file has been loaded
 $(document).ready(main);
 
-// represents a game
-var game = function(gameID) {
-    this.playerA = null;
-    this.playerB = null;
-    this.id = gameID;                    
-    this.gameState = "0 JOINT";
-}
-
 function endGame() {
-    setTimeout(function(){ alert("You won!!!!"); }, 500);
+    setTimeout(function(){
+        alert("You won!!!!");
+    }, 500);
 }
