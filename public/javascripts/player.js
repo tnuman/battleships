@@ -27,7 +27,7 @@ var player = function()  {
 
     // ships of the player
     this.ships = [new ship(1), new ship(2), new ship(3), new ship(4), new ship(5)]
-
+    
     // return the number of ships that haven't sunken yet
     this.shipsLeft = function() {
         var count = 0;
@@ -40,16 +40,16 @@ var player = function()  {
     }
 
     // allows to place a ship on the board, given it's leftmost coordinate and length
-    this.placeShip = function (row, col, length) {
+    this.placeShip = function (row, col) {
         if(this.shipsPlaced <= 4) {
-            for(let i = 0; i < length; i++) {
+            for(let i = 0; i < (shipsPlaced + 1); i++) {
                 if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col)+i] >= 1) {
                     return false;
                 }
             }
             for(let x = 0; x < length; x++) {
                 this.board[row][parseInt(col) + x] = 1;
-                var aShip = this.ships[length - 1];
+                var aShip = this.ships[shipsPlaced];
                 aShip.addCell(row, (parseInt(col) + x));                
             }
             this.shipsPlaced++;

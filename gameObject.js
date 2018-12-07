@@ -1,4 +1,4 @@
-//var player = require("./player");
+//var player = require("./javascripts/player");
 
 // represents a game, the server will store an array of games
 var game = function(gameID) {
@@ -111,10 +111,9 @@ game.prototype.addPlayer = function (p) {
 
     if (this.socketA == null) {
         this.socketA = p;
-        return "A";
-    }
-    else {
+    } else {
         this.socketB = p;
-        return "B";
     }
 };
+
+module.exports = game;
