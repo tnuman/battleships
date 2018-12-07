@@ -1,4 +1,4 @@
-//var ship = require("./ship");
+var ship = require("./ship");
 
 // represents a player of this game
 var player = function()  {
@@ -102,4 +102,4 @@ var player = function()  {
     }
 }
 
-//module.exports = player;
+module.exports = player;

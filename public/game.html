@@ -4,21 +4,17 @@
         <title>Battleships - in-game</title>
         <link rel="stylesheet" href="./stylesheets/game.css">
         <script src="javascripts/jquery-3.3.1.min.js"></script>
-        <script src="./javascripts/client-appOLD.js"></script>
+        <script src="./javascripts/client-app.js"></script>
         <script src="./javascripts/tableInteractions.js"></script>
-        <script src="./javascripts/player.js"></script>
-        <script src="./javascripts/ship.js"></script>
         <script src="./javascripts/messages.js"></script>
     </head>
     
     <body>
     <main>
         <section id="left">
-            <div id="timeDisplay">
-                <div>Time Played:</div>
-                <div>TIME</div>
-            </div>
-            <div id="turnDisplay">TURN</div>
+            <div>Time Played:</div>
+            <div id="timeDisplay"></div>
+            <div id="turnDisplay"></div>
             <!-- (optional) quit button, may be better to remove it-->
             <form action="/" method="GET">
                 <button type="submit">QUIT</button>
@@ -27,21 +23,16 @@
         </section>
 
         <section id="right">
-            <div id="instruction">INSTRUCTION</div>
+            <div id="instruction"></div>
             <div id="you" style ="float:left">
                 <h1 style="text-align:center">Your sea</h1>
                 <div id="gameboardYou"></div>
-                <div id="shipsLeftYou">
-                    Your ships left:
-                    <span>5</span>
-                </div>
+                <div id="shipsLeftYou">Your ships left: <span>5</span></div>
             </div>
             <div id = "opponent" style = "float:right">
                 <h1 style="text-align:center">Opponents sea</h1>
                 <div id="gameboardOpp"></div>
-                <div id="shipsLeftOpp">
-                    Opponents ships left:
-                    <span>5</span>
+                <div id="shipsLeftOpp">Opponents ships left: <span >5</span>
                 </div> 
             </div>
                                                                             

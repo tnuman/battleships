@@ -18,7 +18,7 @@
     exports.O_PLACE_SHIP = {
         type: exports.T_PLACE_SHIP
     };
-    exports.S_CHOOSE = JSON.stringify(exports.O_CHOOSE);
+    exports.S_PLACE_SHIP = JSON.stringify(exports.O_CHOOSE);
 
     /*
      * Client to server: placed a ship
@@ -57,7 +57,8 @@
     exports.T_UPDATE_OPPONENT = "UPDATE-OPPONENT";
     exports.O_UPDATE_OPPONENT = {
         type: T_UPDATE_OPPONENT,
-        data: null
+        board: null,
+        shipsLeft: null
     }; 
     //exports.S_UPDATE_OPPONENT does not exist, as data needs to be set
 
@@ -67,7 +68,8 @@
     exports.T_UPDATE_YOU = "UPDATE-YOU";
     exports.O_UPDATE_YOU = {
        type: T_UPDATE_YOU,
-       data: null
+       board: null,
+       shipsLeft: null
     };
     //exports.S_UPDATE_YOU does not exist, as data needs to be set     
     

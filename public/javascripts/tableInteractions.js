@@ -20,40 +20,38 @@ function createTable(destination, player) {
     destination.appendChild(tbl);
 }
 
-function updateTableCell(cell, player) {
-    var status = player.getCellStatus(cell.attr("row"), cell.attr("col"));
-    //console.log(player.getCellStatus(cell.attr("row"), cell.attr("col")));
-    if(status === 0) {
+function updateTableCell(cell, value) {
+    if(value === 0) {
         cell.attr("class", "empty");
     }
-    if(status === 1) {
+    if(value === 1) {
         cell.attr("class", "ship");
     }
-    if(status === 2) {
+    if(value === 2) {
         cell.attr("class", "miss");
     }
-    if(status === 3) {
+    if(value === 3) {
         cell.attr("class", "hit");
     }
-    if(status === 4) {
+    if(value === 4) {
         cell.attr("class", "sunk");
     }
 }
 
-function updateYourTable(player) {
+function updateYourTable(board) {
     for(let y = 0; y < 10; y++) {
         for(let x = 0; x < 10; x++) {
             var element = "#Y" + String(y) + String(x);
-            updateTableCell($(element), player);
+            updateTableCell($(element), board[y][x]);
         }
     }    
 }
 
-function updateOppTable(player) {
+function updateOppTable(board) {
     for(let y = 0; y < 10; y++) {
         for(let x = 0; x < 10; x++) {
             var element = "#O" + String(y) + String(x);
-            updateTableCell($(element), player);
+            updateTableCell($(element), board[y][x]);
         }
     }    
 }

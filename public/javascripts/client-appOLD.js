@@ -25,7 +25,7 @@ var main = function() {
         } else {
             $("#instruction").text("Wait for the opponent to place his ships");
         }   
-    })
+    });
     
     // guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {

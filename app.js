@@ -91,19 +91,26 @@ wss.on("connection", function connection(ws) {
         if(isPlayerA) {
             if(msg.type === messages.T_SHIP_PLACED) {
                 gameObj.playerA.placeShip(msg.row, msg.col);
+
+                // tell player A to update its own board
+                let messageToA = messages.O_UPDATE_YOU;
+                messageToA.board = gameObj.playerA.board;
+                gameObj.socketA.send(JSON.stringify(messageToA));
             }
             if(msg.type === messages.T_GUESS) {
                 // process the guess of player A into the board of player B 
                 gameObj.playerB.updateCellStatus(msg.row, msg.col);
 
-                // tell player A to update his opponents board
+                // tell player A to update its opponents board
                 let messageToA = messages.O_UPDATE_OPPONENT;
-                messageToA.data = gameObj.playerB.board;
+                messageToA.board = gameObj.playerB.board;
+                messageToA.shipsLeft = gameObj.playerB.shipsLeft;
                 gameObj.socketA.send(JSON.stringify(messageToA));
 
-                // tell player B to update his own board
+                // tell player B to update its own board
                 let messageToB = messages.O_UPDATE_YOU;
-                messageToB.data = gameObj.playerB.board;
+                messageToB.board = gameObj.playerB.board;
+                messageToB.shipsLeft = gameObj.playerB.shipsLeft;
                 gameObj.socketB.send(JSON.stringify(messageToB));
 
                 // Check if all the ships of player B have sunk; if true: player A won
@@ -126,24 +133,32 @@ wss.on("connection", function connection(ws) {
                     gameObj.socketB.send(S_YOUR_TURN);
                 }
             }            
-        } 
+        }
+
         // else the sender of the message was player B
         else {
             if(msg.type === messages.T_SHIP_PLACED) {
                 gameObj.playerB.placeShip(msg.row, msg.col);
+
+                // tell player B to update its own board
+                let messageToB = messages.O_UPDATE_YOU;
+                messageToB.board = gameObj.playerB.board;
+                gameObj.socketB.send(JSON.stringify(messageToB));
             }
             if(msg.type === messages.T_GUESS) {
                 // process the guess of player B into the board of player A
                 gameObj.playerA.updateCellStatus(msg.row, msg.col);
 
-                // tell player B to update his opponents board
+                // tell player B to update its opponents board
                 let messageToB = messages.O_UPDATE_OPPONENT;
-                messageToB.data = gameObj.playerA.board;
+                messageToB.board = gameObj.playerA.board;
+                messageToB.shipsLeft = gameObj.playerA.shipsLeft;
                 gameObj.socketB.send(JSON.stringify(messageToB));
 
-                // tell player A to update his own board
+                // tell player A to update its own board
                 let messageToA = messages.O_UPDATE_YOU;
-                messageToA.data = gameObj.playerA.board;
+                messageToA.board = gameObj.playerA.board;
+                messageToA.shipsLeft = gameObj.playerA.shipsLeft;
                 gameObj.socketA.send(JSON.stringify(messageToA));
                 
                 // Check if all the ships of player A have sunk

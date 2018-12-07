@@ -23,4 +23,4 @@ var ship = function (length) {
     }
 }
 
-//module.exports = ship;
+module.exports = ship;
