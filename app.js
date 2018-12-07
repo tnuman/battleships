@@ -74,7 +74,7 @@ wss.on("connection", function connection(ws) {
         currentGame.socketA.send(messages.S_PLACE_SHIP);
         currentGame.socketB.send(messages.S_PLACE_SHIP);
 
-        currentGame = new game(gameStats.gamesInitialized++);
+        currentGame = new game(gameStats.gamesStarted++);
     }
 
     /*
