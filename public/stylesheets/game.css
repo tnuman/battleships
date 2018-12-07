@@ -3,7 +3,7 @@
 td {
   width: 40px;
   height: 40px;
-  border: solid grey; 
+  border: solid grey;
 }
 
 td.empty {
@@ -27,6 +27,6 @@ td.sunk {
   background-color: black;
 }
 
-div#gameboardOpp td.empty, {
-  cursor: url(./Crosshair.cur), pointer;
+#gameboardOpp td.empty {
+  cursor: url(./crosshair.cur), pointer;
 }

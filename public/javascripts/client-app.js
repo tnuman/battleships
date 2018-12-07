@@ -10,6 +10,19 @@ var main = function() {
     createTable(document.getElementById("gameboardYou"), "Y");
     createTable(document.getElementById("gameboardOpp"), "O");
 
+    // click event for placing ships
+    $("#you #gameboardYou td").on("click", function() {
+        if (setupPhase) {
+            var $cell = $(this);
+
+            // notify the server where the ship needs to be placed
+            let message = Messages.O_SHIP_PLACED;
+            message.row = $cell.attr("row");
+            message.col = $cell.attr("col");
+            socket.send(JSON.stringify(message));
+        }
+    });
+    
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
         var $cell = $(this);
@@ -34,19 +47,6 @@ var main = function() {
         }
     });
 
-    // click event for placing ships
-    $("#you #gameboardYou td").on("click", function() {
-        if (setupPhase) {
-            var $cell = $(this);
-
-            // notify the server where the ship needs to be placed
-            let message = Messages.O_SHIP_PLACED;
-            message.row = $cell.attr("row");
-            message.col = $cell.attr("col");
-            socket.send(JSON.stringify(message));
-        }
-    });
-
     // on message from server
     socket.onmessage = function (event) {
         let incomingMsg = JSON.parse(event.data);
@@ -65,7 +65,7 @@ var main = function() {
             setupPhase = true;                        
         }
 
-        // if SHIP_ACCPETD message, increment shipsPlaced and update the text
+        // if SHIP_ACCPETED message, increment shipsPlaced and update the text
         if(incomingMsg.type === Messages.T_SHIP_ACCEPTED) {
             shipsPlaced++;
             
