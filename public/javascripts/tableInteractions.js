@@ -50,8 +50,10 @@ function updateYourTable(board) {
 function updateOppTable(board) {
     for(let y = 0; y < 10; y++) {
         for(let x = 0; x < 10; x++) {
-            var element = "#O" + String(y) + String(x);
-            updateTableCell($(element), board[y][x]);
+            if (board[y][x] != 1) {
+                var element = "#O" + String(y) + String(x);
+                updateTableCell($(element), board[y][x]);
+            }
         }
     }    
 }

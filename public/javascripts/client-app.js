@@ -12,10 +12,12 @@ var main = function() {
 
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
+        var $cell = $(this);
+        
         // test if its the turn of the player
         if(myTurn) {
             // test if the cell was already guessed
-            if ($(this).attr("class") <= 1) {
+            if ($cell.attr("class") === "empty") {
                 // notify the server where the player guessed
                 let message = Messages.O_GUESS;
                 message.row = $cell.attr("row");
@@ -23,6 +25,7 @@ var main = function() {
                 socket.send(JSON.stringify(message));
                 
                 myTurn = false;
+                $("#turnDisplay div").text("Your");
             } else {
                 alert("You already clicked this cell. Shoot somewhere else!");
             }     
@@ -33,34 +36,20 @@ var main = function() {
 
     // click event for placing ships
     $("#you #gameboardYou td").on("click", function() {
-        
         if (setupPhase) {
             var $cell = $(this);
 
             // notify the server where the ship needs to be placed
-            let message = Messages.O_PLACED_SHIP;
+            let message = Messages.O_SHIP_PLACED;
             message.row = $cell.attr("row");
             message.col = $cell.attr("col");
             socket.send(JSON.stringify(message));
-            
-            shipsPlaced++;
-            //manipulating instruction text
-            if(shipsPlaced + 1 <= 5) {
-                $("#instruction").text("Place your ship of length " + String(shipsPlaced + 1)
-                + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
-            } else {
-                $("#instruction").text("Waiting on your opponent");
-                setupPhase = false;
-            }
         }
     });
 
     // on message from server
     socket.onmessage = function (event) {
-        console.log("Incoming message");
-        console.log(event);
-        console.log(event.type);
-        let incomingMsg = event;
+        let incomingMsg = JSON.parse(event.data);
 
         // if GAME_ABORTED message, notify the player
         if(incomingMsg.type === Messages.T_GAME_ABORTED) {
@@ -76,28 +65,44 @@ var main = function() {
             setupPhase = true;                        
         }
 
+        // if SHIP_ACCPETD message, increment shipsPlaced and update the text
+        if(incomingMsg.type === Messages.T_SHIP_ACCEPTED) {
+            shipsPlaced++;
+            
+            //manipulating instruction text
+            if(shipsPlaced + 1 <= 5) {
+                $("#instruction").text("Place your ship of length " + String(shipsPlaced + 1)
+                + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+            } else {
+                $("#instruction").text("Waiting on your opponent");
+                setupPhase = false;
+            }
+        }
+
         // if YOUR_TURN message, set myTurn to true and modify the turnDisplay and instruction                                
         if(incomingMsg.type === Messages.T_YOUR_TURN) {
             myTurn = true;
-            $("#turnDisplay").text("Your turn!");
+            $("#turnDisplay div").text("Your");
             $("#instruction").text("Click anywhere in your opponent's sea to make a guess.");            
         }
 
         // if UPDATE_OPPONENT message, update the entire view of the opponent
         if(incomingMsg.type === Messages.T_UPDATE_OPPONENT) {
             updateOppTable(incomingMsg.board);
+            console.log(incomingMsg.shipsLeft);
             $("#shipsLeftOpp span").text(incomingMsg.shipsLeft);
         }
 
         // if UPDATE_YOU message, update the entire view of the opponent
         if(incomingMsg.type === Messages.T_UPDATE_YOU) {
             updateYourTable(incomingMsg.board);
+            console.log(incomingMsg.shipsLeft);
             $("#shipsLeftYou span").text(incomingMsg.shipsLeft);
         }
 
         // if GAME_OVER message, call endGame with the provided boolean value
         if(incomingMsg.type === Messages.T_GAME_OVER) {
-            endGame(incomingMsg.data);            
+            setTimeout(endGame(incomingMsg.data), 10000);            
         }
     }
     

@@ -45,7 +45,7 @@ setInterval(function(){
             if(gameObj.transitionStates[gameObj.gameState] === 3){
                 if (gameObj.playerA.shipsPlaced === 5 && gameObj.playerB.shipsPlaced === 5) {
                     gameObj.setStatus("A TURN");
-                    gameObj.socketA.send(S_YOUR_TURN);
+                    gameObj.socketA.send(messages.S_YOUR_TURN);
                 }
             }
         }
@@ -53,7 +53,6 @@ setInterval(function(){
 }, 5000);
 
 var currentGame = new game(gameStats.gamesStarted++);
-console.log(gameStats.gamesStarted);
 var connectionID = 0;//each websocket receives a unique ID
 
 wss.on("connection", function connection(ws) {
@@ -68,8 +67,6 @@ wss.on("connection", function connection(ws) {
     /*
      * if the current game has two players, inform the players and create a new game for the next player(s) to connect
      */ 
-    console.log(currentGame.hasTwoConnectedPlayers());
-
     if (currentGame.hasTwoConnectedPlayers()) {
         console.log("Initializing game %s", currentGame.id);
         currentGame.setStatus("SETUP");
@@ -87,19 +84,22 @@ wss.on("connection", function connection(ws) {
     con.on("message", function incoming(message) {
         
         let msg = JSON.parse(message);
-
+        console.log("Received message: " + message);
         let gameObj = websockets[con.id];
         let isPlayerA = (gameObj.socketA === con) ? true : false;
 
         // check if the sender of the message was player A
         if(isPlayerA) {
             if(msg.type === messages.T_SHIP_PLACED) {
-                gameObj.playerA.placeShip(msg.row, msg.col);
+                var shipAccepted = gameObj.playerA.placeShip(msg.row, msg.col);
 
-                // tell player A to update its own board
-                let messageToA = messages.O_UPDATE_YOU;
-                messageToA.board = gameObj.playerA.board;
-                gameObj.socketA.send(JSON.stringify(messageToA));
+                if (shipAccepted) {
+                    // tell player A to update its own board
+                    let messageToA = messages.O_UPDATE_YOU;
+                    messageToA.board = gameObj.playerA.board;
+                    gameObj.socketA.send(JSON.stringify(messageToA));
+                    gameObj.socketA.send(messages.S_SHIP_ACCEPTED);
+                }
             }
             if(msg.type === messages.T_GUESS) {
                 // process the guess of player A into the board of player B 
@@ -108,46 +108,51 @@ wss.on("connection", function connection(ws) {
                 // tell player A to update its opponents board
                 let messageToA = messages.O_UPDATE_OPPONENT;
                 messageToA.board = gameObj.playerB.board;
-                messageToA.shipsLeft = gameObj.playerB.shipsLeft;
+                messageToA.shipsLeft = gameObj.playerB.shipsLeft();
                 gameObj.socketA.send(JSON.stringify(messageToA));
 
                 // tell player B to update its own board
                 let messageToB = messages.O_UPDATE_YOU;
                 messageToB.board = gameObj.playerB.board;
-                messageToB.shipsLeft = gameObj.playerB.shipsLeft;
+                messageToB.shipsLeft = gameObj.playerB.shipsLeft();
                 gameObj.socketB.send(JSON.stringify(messageToB));
 
                 // Check if all the ships of player B have sunk; if true: player A won
-                if (playerB.hasLost()) {
+                if (gameObj.playerB.hasLost()) {
                     gameObj.setStatus("A WON");
                     
                     // tell player A it won (data === true)
                     let messageToA = messages.O_GAME_OVER;
                     messageToA.data = true;
-                    gameObj.socketA.send(JSON.stringify(messageToA));
+                    setTimeout(function() {gameObj.socketA.send(JSON.stringify(messageToA))}, 750);
 
                     // tell player B it lost (data === false)
                     let messageToB = messages.O_GAME_OVER;
                     messageToB.data = false;
-                    gameObj.socketB.send(JSON.stringify(messageToB));
+                    setTimeout(function() {gameObj.socketB.send(JSON.stringify(messageToB))}, 750);
                 } 
                 // else the game continues; tell player B it's their turn 
                 else {
                     gameObj.setStatus("B TURN");
-                    gameObj.socketB.send(S_YOUR_TURN);
+                    gameObj.socketB.send(messages.S_YOUR_TURN);
                 }
             }            
         }
 
+
+
         // else the sender of the message was player B
         else {
             if(msg.type === messages.T_SHIP_PLACED) {
-                gameObj.playerB.placeShip(msg.row, msg.col);
+                var shipAccepted = gameObj.playerB.placeShip(msg.row, msg.col);
 
-                // tell player B to update its own board
-                let messageToB = messages.O_UPDATE_YOU;
-                messageToB.board = gameObj.playerB.board;
-                gameObj.socketB.send(JSON.stringify(messageToB));
+                if (shipAccepted) {
+                    // tell player B to update its own board
+                    let messageToB = messages.O_UPDATE_YOU;
+                    messageToB.board = gameObj.playerB.board;
+                    gameObj.socketB.send(JSON.stringify(messageToB));
+                    gameObj.socketB.send(messages.S_SHIP_ACCEPTED);
+                }
             }
             if(msg.type === messages.T_GUESS) {
                 // process the guess of player B into the board of player A
@@ -156,33 +161,33 @@ wss.on("connection", function connection(ws) {
                 // tell player B to update its opponents board
                 let messageToB = messages.O_UPDATE_OPPONENT;
                 messageToB.board = gameObj.playerA.board;
-                messageToB.shipsLeft = gameObj.playerA.shipsLeft;
+                messageToB.shipsLeft = gameObj.playerA.shipsLeft();
                 gameObj.socketB.send(JSON.stringify(messageToB));
 
                 // tell player A to update its own board
                 let messageToA = messages.O_UPDATE_YOU;
                 messageToA.board = gameObj.playerA.board;
-                messageToA.shipsLeft = gameObj.playerA.shipsLeft;
+                messageToA.shipsLeft = gameObj.playerA.shipsLeft();
                 gameObj.socketA.send(JSON.stringify(messageToA));
                 
                 // Check if all the ships of player A have sunk
-                if (playerA.hasLost()) {
+                if (gameObj.playerA.hasLost()) {
                     gameObj.setStatus("B WON");
                     
                     // tell player A it lost (data === false)
                     let messageToA = messages.O_GAME_OVER;
                     messageToA.data = false;
-                    gameObj.socketA.send(JSON.stringify(messageToA));
+                    setTimeout(function() {gameObj.socketA.send(JSON.stringify(messageToA))}, 750);
                     
                     // tell player B it won (data === true)
                     let messageToB = messages.O_GAME_OVER;
                     messageToB.data = true;
-                    gameObj.socketB.send(JSON.stringify(messageToB));
+                    setTimeout(function() {gameObj.socketB.send(JSON.stringify(messageToB))}, 750);
                 } 
                 // else the game continues; tell player A it's their turn
                 else {
                     gameObj.setStatus("A TURN");
-                    gameObj.socketA.send(S_YOUR_TURN);
+                    gameObj.socketA.send(messages.S_YOUR_TURN);
                 }
             } 
         }                     
@@ -191,12 +196,12 @@ wss.on("connection", function connection(ws) {
 
     con.on("close", function (code) {
         
-        console.log(con.id + " disconnected");
+        console.log("Player " + con.id + " disconnected");
         // code 1001 = closing initiated by the client
         if (code == "1001") {
             // try to abort the game, else the game is already completed
             let gameObj = websockets[con.id];
-            gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft - gameObj.playerB.shipsLeft;
+            gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft();
 
             if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
                 gameObj.setStatus("ABORTED"); 

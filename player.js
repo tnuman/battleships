@@ -42,14 +42,14 @@ var player = function()  {
     // allows to place a ship on the board, given it's leftmost coordinate and length
     this.placeShip = function (row, col) {
         if(this.shipsPlaced <= 4) {
-            for(let i = 0; i < (shipsPlaced + 1); i++) {
+            for(let i = 0; i < (this.shipsPlaced + 1); i++) {
                 if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col)+i] >= 1) {
                     return false;
                 }
             }
-            for(let x = 0; x < length; x++) {
+            for(let x = 0; x < (this.shipsPlaced + 1); x++) {
                 this.board[row][parseInt(col) + x] = 1;
-                var aShip = this.ships[shipsPlaced];
+                var aShip = this.ships[this.shipsPlaced];
                 aShip.addCell(row, (parseInt(col) + x));                
             }
             this.shipsPlaced++;

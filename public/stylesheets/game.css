@@ -11,12 +11,8 @@ td.empty {
   cursor: pointer;
 }
 
-div#gameboardYou td.ship {
+td.ship {
   background-color: rgb(161, 159, 159);
-}
-
-div#gameboardOpp td.ship {
-  background-color: white;
 }
 
 td.miss {
@@ -31,6 +27,6 @@ td.sunk {
   background-color: black;
 }
 
-div#gameboardOpp td.empty, div#gameboardOpp td.ship {
-  /*cursor: url(/public/images/Crosshair.cur), pointer;*/
+div#gameboardOpp td.empty, {
+  cursor: url(./Crosshair.cur), pointer;
 }

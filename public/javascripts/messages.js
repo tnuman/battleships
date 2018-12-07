@@ -16,7 +16,7 @@
     exports.O_PLACE_SHIP = {
         type: exports.T_PLACE_SHIP
     };
-    exports.S_PLACE_SHIP = JSON.stringify(exports.O_CHOOSE);
+    exports.S_PLACE_SHIP = JSON.stringify(exports.O_PLACE_SHIP);
 
     /*
      * Client to server: placed a ship
@@ -28,6 +28,15 @@
         col: null
     };
     //exports.S_SHIP_PLACED does not exist, as data needs to be set
+
+    /*
+     * Server to client: placing of a ship accepted
+    */
+   exports.T_SHIP_ACCEPTED = "SHIP-ACCEPTED";
+   exports.O_SHIP_ACCEPTED = {
+       type: exports.T_SHIP_ACCEPTED
+   };
+   exports.S_SHIP_ACCEPTED = JSON.stringify(exports.O_SHIP_ACCEPTED); 
 
     /*
     / Server to client: your turn to make a guess
@@ -43,7 +52,7 @@
      */
     exports.T_GUESS = "GUESS";         
     exports.O_GUESS = {
-        type: exports.GUESS,
+        type: exports.T_GUESS,
         row: null,
         col: null
     };
