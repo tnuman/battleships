@@ -30,3 +30,7 @@ td.sunk {
 #gameboardOpp td.empty {
   cursor: url(./crosshair.cur), pointer;
 }
+
+#turnDisplay {
+  display: none;
+}

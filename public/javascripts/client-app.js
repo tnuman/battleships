@@ -5,6 +5,9 @@ var main = function() {
     var shipsPlaced = 0;
     var myTurn = false;
     var setupPhase = false;
+    var start = false;
+    var minutes = 0;
+    var seconds = 0;
 
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
@@ -22,6 +25,29 @@ var main = function() {
             socket.send(JSON.stringify(message));
         }
     });
+
+    // if the game has started (2 players have joined), update the timer every second
+    
+        setInterval(function(){
+                if (start) {
+                seconds++;
+                if (seconds === 60) {
+                    minutes++;
+                    seconds = 0;
+                }
+                console.log("minutes " + minutes + " seconds: " + seconds);
+                $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
+            }
+        }, 1000);
+
+    // returns a string representation of the number of seconds
+    var secondsToString = function(seconds) {
+        if (seconds < 10) {
+            return "0" + seconds;
+        } else {
+            return seconds;
+        }
+    }
     
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
@@ -43,7 +69,7 @@ var main = function() {
                 alert("You already clicked this cell. Shoot somewhere else!");
             }     
         } else {
-            alert("It's not your turn!");
+            alert("It's not your turn! Please wait for your opponent.");
         }
     });
 
@@ -53,8 +79,10 @@ var main = function() {
 
         // if GAME_ABORTED message, notify the player
         if(incomingMsg.type === Messages.T_GAME_ABORTED) {
-            alert("Your opponent left");
-            $("#turnDisplay").empty();
+            start = false;
+            $("#turnDisplay").hide();
+            $("#instruction").text("GAME ABORTED");
+            alert("Your opponent left the game...");
         }
 
         // if PLACE_SHIP message, allow the player to place their ships
@@ -62,7 +90,9 @@ var main = function() {
             // manipulating instruction text
             console.log("setup phase");
             $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
-            setupPhase = true;                        
+            setupPhase = true;
+            start = true;
+            console.log(start);
         }
 
         // if SHIP_ACCPETED message, increment shipsPlaced and update the text
@@ -74,7 +104,7 @@ var main = function() {
                 $("#instruction").text("Place your ship of length " + String(shipsPlaced + 1)
                 + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
             } else {
-                $("#instruction").text("Waiting on your opponent");
+                $("#instruction").text("Waiting for your opponent to place his ships");
                 setupPhase = false;
             }
         }
@@ -82,27 +112,35 @@ var main = function() {
         // if YOUR_TURN message, set myTurn to true and modify the turnDisplay and instruction                                
         if(incomingMsg.type === Messages.T_YOUR_TURN) {
             myTurn = true;
+            $("#turnDisplay").show();
             $("#turnDisplay div").text("Your");
             $("#instruction").text("Click anywhere in your opponent's sea to make a guess.");            
+        }
+
+        // if OPPONENT_TURN message, modify the turnDisplay and instruction
+        if(incomingMsg.type === Messages.T_OPPONENT_TURN) {
+            $("#turnDisplay").show();
+            $("#turnDisplay div").text("Opponents");
+            $("#instruction").text("Waiting for your opponent to shoot");
         }
 
         // if UPDATE_OPPONENT message, update the entire view of the opponent
         if(incomingMsg.type === Messages.T_UPDATE_OPPONENT) {
             updateOppTable(incomingMsg.board);
-            console.log(incomingMsg.shipsLeft);
             $("#shipsLeftOpp span").text(incomingMsg.shipsLeft);
         }
 
         // if UPDATE_YOU message, update the entire view of the opponent
         if(incomingMsg.type === Messages.T_UPDATE_YOU) {
             updateYourTable(incomingMsg.board);
-            console.log(incomingMsg.shipsLeft);
             $("#shipsLeftYou span").text(incomingMsg.shipsLeft);
         }
 
         // if GAME_OVER message, call endGame with the provided boolean value
         if(incomingMsg.type === Messages.T_GAME_OVER) {
-            setTimeout(endGame(incomingMsg.data), 10000);            
+            start = false;
+            console.log(incomingMsg.data);
+            setTimeout(endGame(incomingMsg.data));            
         }
     }
     
@@ -114,7 +152,7 @@ var main = function() {
 $(document).ready(main);
 
 function endGame(hasWon) {
-    if(hasWon) {
+    if(hasWon === true) {
         alert("You won!");
     } else {
         alert("You lost :(");

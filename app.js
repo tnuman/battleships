@@ -46,11 +46,12 @@ setInterval(function(){
                 if (gameObj.playerA.shipsPlaced === 5 && gameObj.playerB.shipsPlaced === 5) {
                     gameObj.setStatus("A TURN");
                     gameObj.socketA.send(messages.S_YOUR_TURN);
+                    gameObj.socketB.send(messages.S_OPPONENT_TURN);
                 }
             }
         }
     }     
-}, 5000);
+}, 2000);
 
 var currentGame = new game(gameStats.gamesStarted++);
 var connectionID = 0;//each websocket receives a unique ID
@@ -121,25 +122,28 @@ wss.on("connection", function connection(ws) {
                 if (gameObj.playerB.hasLost()) {
                     gameObj.setStatus("A WON");
                     
-                    // tell player A it won (data === true)
-                    let messageToA = messages.O_GAME_OVER;
-                    messageToA.data = true;
-                    setTimeout(function() {gameObj.socketA.send(JSON.stringify(messageToA))}, 750);
+                    // first wait for the tables to update, then tell player A he won (data === true)
+                    setTimeout(function() {
+                        let messageToA = messages.O_GAME_OVER;
+                        messageToA.data = true;
+                        gameObj.socketA.send(JSON.stringify(messageToA))
+                    }, 750);
 
-                    // tell player B it lost (data === false)
-                    let messageToB = messages.O_GAME_OVER;
-                    messageToB.data = false;
-                    setTimeout(function() {gameObj.socketB.send(JSON.stringify(messageToB))}, 750);
+                    // first wait for the tables to update, tell player B he lost (data === false)
+                    setTimeout(function() {
+                        let messageToB = messages.O_GAME_OVER;
+                        messageToB.data = false;
+                        gameObj.socketB.send(JSON.stringify(messageToB))
+                    }, 750);
                 } 
-                // else the game continues; tell player B it's their turn 
+                // else the game continues; tell player B it's his turn 
                 else {
                     gameObj.setStatus("B TURN");
                     gameObj.socketB.send(messages.S_YOUR_TURN);
+                    gameObj.socketA.send(messages.S_OPPONENT_TURN);
                 }
             }            
         }
-
-
 
         // else the sender of the message was player B
         else {
@@ -174,20 +178,25 @@ wss.on("connection", function connection(ws) {
                 if (gameObj.playerA.hasLost()) {
                     gameObj.setStatus("B WON");
                     
-                    // tell player A it lost (data === false)
-                    let messageToA = messages.O_GAME_OVER;
-                    messageToA.data = false;
-                    setTimeout(function() {gameObj.socketA.send(JSON.stringify(messageToA))}, 750);
+                    // first wait for the tables to update, tell player A he lost (data === false)
+                    setTimeout(function() {
+                        let messageToA = messages.O_GAME_OVER;
+                        messageToA.data = false;
+                        gameObj.socketA.send(JSON.stringify(messageToA))
+                    }, 750);
                     
-                    // tell player B it won (data === true)
-                    let messageToB = messages.O_GAME_OVER;
-                    messageToB.data = true;
-                    setTimeout(function() {gameObj.socketB.send(JSON.stringify(messageToB))}, 750);
+                    // first wait for the tables to update, tell player B he won (data === true)
+                    setTimeout(function() {
+                        let messageToB = messages.O_GAME_OVER;
+                        messageToB.data = true;
+                        gameObj.socketB.send(JSON.stringify(messageToB))
+                    }, 750);
                 } 
-                // else the game continues; tell player A it's their turn
+                // else the game continues; tell player A it's his turn
                 else {
                     gameObj.setStatus("A TURN");
                     gameObj.socketA.send(messages.S_YOUR_TURN);
+                    gameObj.socketB.send(messages.S_OPPONENT_TURN);
                 }
             } 
         }                     
@@ -204,29 +213,27 @@ wss.on("connection", function connection(ws) {
             gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft();
 
             if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
-                gameObj.setStatus("ABORTED"); 
-
-                /*
-                 * determine whose connection remains open;
-                 * close it
-                 */
-                try {
-                    gameObj.socketA.close();
-                    gameObj.socketA = null;
-                }
-                catch(e){
-                    console.log("Player A closing: "+ e);
-                }
-
-                try {
-                    gameObj.socketB.close(); 
-                    gameObj.socketB = null;
-                }
-                catch(e){
-                    console.log("Player B closing: " + e);
-                }                
-            }
-            
+                gameObj.setStatus("ABORTED");
+                if (con === gameObj.socketA) {
+                    try {
+                        gameObj.socketB.send(messages.S_GAME_ABORTED);
+                        gameObj.socketB.close(); 
+                        gameObj.socketB = null;
+                    }
+                    catch(e){
+                        console.log("Player B closing: " + e);
+                    }    
+                } else {
+                    try {
+                        gameObj.socketA.send(messages.S_GAME_ABORTED);
+                        gameObj.socketA.close();
+                        gameObj.socketA = null;
+                    }
+                    catch(e){
+                        console.log("Player A closing: "+ e);
+                    }
+                }        
+            } 
         }
     });
 
