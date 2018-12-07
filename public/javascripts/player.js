@@ -1,3 +1,5 @@
+//var ship = require("./ship");
+
 // represents a player of this game
 var player = function()  {
     
@@ -99,3 +101,5 @@ var player = function()  {
         return this.hitCount === 15;
     }
 }
+
+//module.exports = player;

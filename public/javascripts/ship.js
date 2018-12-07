@@ -22,3 +22,5 @@ var ship = function (length) {
         return this.length === this.hits;
     }
 }
+
+//module.exports = ship;
