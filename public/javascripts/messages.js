@@ -1,5 +1,3 @@
-// NOG AANPASSEN VOOR ONZE GAME
-
 (function(exports){
 
     /*
@@ -38,7 +36,7 @@
     exports.O_YOUR_TURN = {
         type: exports.T_YOUR_TURN
     };
-    exports.S_YOUR_TURN = JSON.stringify(O_YOUR_TURN);
+    exports.S_YOUR_TURN = JSON.stringify(exports.O_YOUR_TURN);
     
     /* 
      * Client to server: guessed cell 
@@ -56,7 +54,7 @@
     */
     exports.T_UPDATE_OPPONENT = "UPDATE-OPPONENT";
     exports.O_UPDATE_OPPONENT = {
-        type: T_UPDATE_OPPONENT,
+        type: exports.T_UPDATE_OPPONENT,
         board: null,
         shipsLeft: null
     }; 
@@ -67,7 +65,7 @@
     */
     exports.T_UPDATE_YOU = "UPDATE-YOU";
     exports.O_UPDATE_YOU = {
-       type: T_UPDATE_YOU,
+       type: exports.T_UPDATE_YOU,
        board: null,
        shipsLeft: null
     };

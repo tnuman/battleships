@@ -52,14 +52,15 @@ setInterval(function(){
     }     
 }, 5000);
 
-var currentGame = new Game(gameStats.gamesStarted++);
+var currentGame = new game(gameStats.gamesStarted++);
+console.log(gameStats.gamesStarted);
 var connectionID = 0;//each websocket receives a unique ID
 
 wss.on("connection", function connection(ws) {
     // add the connected player
     let con = ws; 
     con.id = connectionID++;
-    currentGame.addPlayer;
+    currentGame.addPlayer(con);
     websockets[con.id] = currentGame;
 
     console.log("Player %s placed in game %s", con.id, currentGame.id);
@@ -67,16 +68,19 @@ wss.on("connection", function connection(ws) {
     /*
      * if the current game has two players, inform the players and create a new game for the next player(s) to connect
      */ 
+    console.log(currentGame.hasTwoConnectedPlayers());
+
     if (currentGame.hasTwoConnectedPlayers()) {
+        console.log("Initializing game %s", currentGame.id);
         currentGame.setStatus("SETUP");
         currentGame.socketA.send(messages.S_PLACE_SHIP);
         currentGame.socketB.send(messages.S_PLACE_SHIP);
 
-        currentGame = new Game(gameStats.gamesInitialized++);
+        currentGame = new game(gameStats.gamesInitialized++);
     }
 
     /*
-     * Message coming in form a player:
+     * Message coming in from a player:
      * 1. Placed ships
      * 2. Guessed cell     
      */

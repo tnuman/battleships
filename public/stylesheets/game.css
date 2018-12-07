@@ -32,5 +32,5 @@ td.sunk {
 }
 
 div#gameboardOpp td.empty, div#gameboardOpp td.ship {
-  cursor: url(images/Crosshairs\ 1.cur), pointer;
+  /*cursor: url(/public/images/Crosshair.cur), pointer;*/
 }
