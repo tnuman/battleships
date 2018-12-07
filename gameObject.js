@@ -1,4 +1,4 @@
-//var player = require("./javascripts/player");
+var player = require("./javascripts/player");
 
 // represents a game, the server will store an array of games
 var game = function(gameID) {
