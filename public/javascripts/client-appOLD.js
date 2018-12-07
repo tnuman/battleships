@@ -45,7 +45,6 @@ var main = function() {
             endGame();
         } 
     });
-
 }
 // executes main when the JavaScript file has been loaded
 $(document).ready(main);

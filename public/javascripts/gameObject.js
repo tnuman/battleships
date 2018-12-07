@@ -41,8 +41,8 @@ game.prototype.transitionMatrix = [
     [1, 0, 1, 0, 0, 0, 0, 0, 0],   //1 JOINT
     [0, 0, 0, 1, 0, 0, 0, 0, 1],   //2 JOINT
     [0, 0, 0, 0, 1, 0, 0, 0, 1],   //SETUP
-    [0, 0, 0, 0, 0, 1, 1, 1, 1],   //A TURN
-    [0, 0, 0, 0, 1, 0, 1, 1, 1],   //B TURN
+    [0, 0, 0, 0, 0, 1, 1, 0, 1],   //A TURN
+    [0, 0, 0, 0, 1, 0, 0, 1, 1],   //B TURN
     [0, 0, 0, 0, 0, 0, 0, 0, 0],   //A WON
     [0, 0, 0, 0, 0, 0, 0, 0, 0],   //B WON
     [0, 0, 0, 0, 0, 0, 0, 0, 0]    //ABORTED
@@ -56,7 +56,7 @@ game.prototype.isValidTransition = function (from, to) {
     console.assert( to in game.prototype.transitionStates == true, "%s: Expecting %s to be a valid transition state", arguments.callee.name, to);
 
 
-    let s1, s2;
+    var s1, s2;
     if (! (from in game.prototype.transitionStates)) {
         return false;
     }
