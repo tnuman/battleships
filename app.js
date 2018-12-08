@@ -86,8 +86,8 @@ wss.on("connection", function connection(ws) {
     con.on("message", function incoming(message) {
         
         let msg = JSON.parse(message);
-        console.log("Received message: " + message);
         let gameObj = websockets[con.id];
+        console.log("Received message from player %s (game %s): %s", con.id, gameObj.id, message);
         let isPlayerA = (gameObj.socketA === con) ? true : false;
 
         // check if the SENDER of the message was PLAYER A
