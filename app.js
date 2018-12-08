@@ -70,7 +70,6 @@ wss.on("connection", function connection(ws) {
      * if the current game has two players, inform the players and create a new game for the next player(s) to connect
      */ 
     if (currentGame.hasTwoConnectedPlayers()) {
-        console.log("Initializing game %s", currentGame.id);
         currentGame.setStatus("SETUP");
         currentGame.socketA.send(messages.S_PLACE_SHIP);
         currentGame.socketB.send(messages.S_PLACE_SHIP);

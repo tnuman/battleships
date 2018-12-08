@@ -21,7 +21,7 @@ var main = function() {
                 minutes++;
                 seconds = 0;
             }
-            $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
+            displayTimer(minutes, seconds);
         }
     }, 1000);
 
@@ -29,7 +29,7 @@ var main = function() {
     $("#you #gameboardYou td").on("click", function() {
         if (setupPhase) {
             var $cell = $(this);
-
+            
             // notify the server where the ship needs to be placed
             let message = Messages.O_SHIP_PLACED;
             message.row = $cell.attr("row");
@@ -40,11 +40,10 @@ var main = function() {
     
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
-        var $cell = $(this);
-        
-        // test if its the turn of the player
         if(myTurn) {
-            // test if the cell was already guessed
+            var $cell = $(this);
+            
+            // check whether the cell is still empty
             if ($cell.attr("class") === "empty") {
                 // notify the server where the player guessed
                 let message = Messages.O_GUESS;
@@ -131,14 +130,18 @@ var main = function() {
         }
     }
 }
+// executes main when the JavaScript file has been loaded
+$(document).ready(main);
 
 // returns a string representation of the number of seconds
-var secondsToString = function(seconds) {
+var displayTimer = function(minutes, seconds) {
+    var time;
     if (seconds < 10) {
-        return "0" + seconds;
+        time = minutes + ":0" + seconds;
     } else {
-        return seconds;
+        time = minutes + ":" + seconds;
     }
+    $("#timeDisplay div").text(time);
 }
 
 // informs the player if he has won/lost the game
@@ -150,5 +153,3 @@ function endGame(hasWon) {
     }
 }
 
-// executes main when the JavaScript file has been loaded
-$(document).ready(main);
