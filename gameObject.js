@@ -19,7 +19,7 @@ var game = function(gameID) {
     -> server will send message(s) to / calls function of the clients to update their table(cell)s / text fields (like instruction, ships left etc.)
     - listen for messages from the server / execute callback function to update the view
 
-    Dan krijg je dus eigenlijk die MVC structuur en is denk ik het meest praktisch
+    Then you actually get the MVC structure and I think this is the most practical
     */
 }
 
@@ -48,51 +48,54 @@ game.prototype.transitionMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0]    //ABORTED
 ];
 
+// indicates whether the transition from 'from' to 'to' is valid
 game.prototype.isValidTransition = function (from, to) {
     
-    console.assert(typeof from == "string", "%s: Expecting a string, got a %s", arguments.callee.name, typeof from);
-    console.assert(typeof to == "string", "%s: Expecting a string, got a %s", arguments.callee.name, typeof to);
-    console.assert( from in game.prototype.transitionStates == true, "%s: Expecting %s to be a valid transition state", arguments.callee.name, from);
-    console.assert( to in game.prototype.transitionStates == true, "%s: Expecting %s to be a valid transition state", arguments.callee.name, to);
-
+    console.assert(typeof from === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof from);
+    console.assert(typeof to === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof to);
+    console.assert(from in game.prototype.transitionStates === true, "%s: %s should be a valid transition state", arguments.callee.name, from);
+    console.assert(to in game.prototype.transitionStates === true, "%s: %s should be a valid transition state", arguments.callee.name, to);
 
     var s1, s2;
-    if (! (from in game.prototype.transitionStates)) {
+    if (!game.prototype.isValidState(from)) {
         return false;
-    }
-    else {
+    } else {
         s1 = game.prototype.transitionStates[from];
-    }
-
-    if (!(to in game.prototype.transitionStates)) {
+    } 
+    if (!game.prototype.isValidState(to)) {
         return false;
-    }
-    else {
+    } else {
         s2 = game.prototype.transitionStates[to];
     }
-
     return (game.prototype.transitionMatrix[s1][s2] > 0);
 };
 
+// indicates whether s is a valid state
 game.prototype.isValidState = function (s) {
     return (s in game.prototype.transitionStates);
 };
 
-game.prototype.setStatus = function (w) {
+// indicates whether the game has a final state
+game.prototype.hasFinalState = function () {
+    return (this.transitionStates[this.gameState] >= 6);
+}
 
-    console.assert(typeof w == "string", "%s: String expected, but got a %s", arguments.callee.name, typeof w);
+// sets the status of this game to 'to', provided that 'to' is a valid state and the transition is valid
+game.prototype.setStatus = function (to) {
 
-    if (game.prototype.isValidState(w) && game.prototype.isValidTransition(this.gameState, w)) {
-        this.gameState = w;
+    console.assert(typeof to === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof to);
+
+    if (game.prototype.isValidState(to) && game.prototype.isValidTransition(this.gameState, to)) {
+        this.gameState = to;
         console.log("[STATUS] %s", this.gameState);
     }
     else {
-        return new Error("Can't change the game status from %s to %s", this.gameState, w);
+        return new Error("Can't change the game status from %s to %s", this.gameState, to);
     }
 };
 
 game.prototype.hasTwoConnectedPlayers = function () {
-    return (this.gameState == "2 JOINT");
+    return (this.gameState === "2 JOINT");
 };
 
 game.prototype.addPlayer = function (p) {
@@ -109,7 +112,7 @@ game.prototype.addPlayer = function (p) {
         this.setStatus("2 JOINT");
     }
 
-    if (this.socketA == null) {
+    if (this.socketA === null) {
         this.socketA = p;
     } else {
         this.socketB = p;

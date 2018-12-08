@@ -27,18 +27,16 @@ var main = function() {
     });
 
     // if the game has started (2 players have joined), update the timer every second
-    
-        setInterval(function(){
-                if (start) {
-                seconds++;
-                if (seconds === 60) {
-                    minutes++;
-                    seconds = 0;
-                }
-                console.log("minutes " + minutes + " seconds: " + seconds);
-                $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
+    setInterval(function(){
+        if (start) {
+            seconds++;
+            if (seconds === 60) {
+                minutes++;
+                seconds = 0;
             }
-        }, 1000);
+            $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
+        }
+    }, 1000);
 
     // returns a string representation of the number of seconds
     var secondsToString = function(seconds) {
@@ -88,11 +86,9 @@ var main = function() {
         // if PLACE_SHIP message, allow the player to place their ships
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
-            console.log("setup phase");
             $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
             setupPhase = true;
             start = true;
-            console.log(start);
         }
 
         // if SHIP_ACCPETED message, increment shipsPlaced and update the text
@@ -140,17 +136,12 @@ var main = function() {
         if(incomingMsg.type === Messages.T_GAME_OVER) {
             start = false;
             console.log(incomingMsg.data);
-            setTimeout(endGame(incomingMsg.data));            
+            endGame(incomingMsg.data);            
         }
     }
-    
-
-
 }
 
-// executes main when the JavaScript file has been loaded
-$(document).ready(main);
-
+// informs the player if he has won/lost the game
 function endGame(hasWon) {
     if(hasWon === true) {
         alert("You won!");
@@ -158,3 +149,6 @@ function endGame(hasWon) {
         alert("You lost :(");
     }
 }
+
+// executes main when the JavaScript file has been loaded
+$(document).ready(main);
