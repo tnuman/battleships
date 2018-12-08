@@ -5,13 +5,25 @@ var main = function() {
     var shipsPlaced = 0;
     var myTurn = false;
     var setupPhase = false;
-    var start = false;
+    var timer = false;
     var minutes = 0;
     var seconds = 0;
 
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
     createTable(document.getElementById("gameboardOpp"), "O");
+
+    // if the game is ongoing, update the timer every second
+    setInterval(function(){
+        if (timer) {
+            seconds++;
+            if (seconds === 60) {
+                minutes++;
+                seconds = 0;
+            }
+            $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
+        }
+    }, 1000);
 
     // click event for placing ships
     $("#you #gameboardYou td").on("click", function() {
@@ -25,27 +37,6 @@ var main = function() {
             socket.send(JSON.stringify(message));
         }
     });
-
-    // if the game has started (2 players have joined), update the timer every second
-    setInterval(function(){
-        if (start) {
-            seconds++;
-            if (seconds === 60) {
-                minutes++;
-                seconds = 0;
-            }
-            $("#timeDisplay div").text(minutes + ":" + secondsToString(seconds));
-        }
-    }, 1000);
-
-    // returns a string representation of the number of seconds
-    var secondsToString = function(seconds) {
-        if (seconds < 10) {
-            return "0" + seconds;
-        } else {
-            return seconds;
-        }
-    }
     
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
@@ -67,7 +58,7 @@ var main = function() {
                 alert("You already clicked this cell. Shoot somewhere else!");
             }     
         } else {
-            alert("It's not your turn! Please wait for your opponent.");
+            alert("It's not your turn! Please wait for your opponent to shoot.");
         }
     });
 
@@ -77,7 +68,7 @@ var main = function() {
 
         // if GAME_ABORTED message, notify the player
         if(incomingMsg.type === Messages.T_GAME_ABORTED) {
-            start = false;
+            timer = false;
             $("#turnDisplay").hide();
             $("#instruction").text("GAME ABORTED");
             alert("Your opponent left the game...");
@@ -88,7 +79,7 @@ var main = function() {
             // manipulating instruction text
             $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
             setupPhase = true;
-            start = true;
+            timer = true;
         }
 
         // if SHIP_ACCPETED message, increment shipsPlaced and update the text
@@ -110,7 +101,7 @@ var main = function() {
             myTurn = true;
             $("#turnDisplay").show();
             $("#turnDisplay div").text("Your");
-            $("#instruction").text("Click anywhere in your opponent's sea to make a guess.");            
+            $("#instruction").text("Click anywhere in your opponent's sea to make a guess");            
         }
 
         // if OPPONENT_TURN message, modify the turnDisplay and instruction
@@ -134,10 +125,19 @@ var main = function() {
 
         // if GAME_OVER message, call endGame with the provided boolean value
         if(incomingMsg.type === Messages.T_GAME_OVER) {
-            start = false;
+            timer = false;
             console.log(incomingMsg.data);
             endGame(incomingMsg.data);            
         }
+    }
+}
+
+// returns a string representation of the number of seconds
+var secondsToString = function(seconds) {
+    if (seconds < 10) {
+        return "0" + seconds;
+    } else {
+        return seconds;
     }
 }
 
