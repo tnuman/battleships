@@ -1,1 +1,12 @@
-/* TODO: MAKE CSS FILE FOR SPLASHSCREEN*/
+:root {
+    --darkblue: #020336;
+    --sea: #176B76;
+}
+
+body {
+    background-color: var(--darkblue);
+}
+
+footer{
+    background-color: var(--sea);
+}
