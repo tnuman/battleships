@@ -11,39 +11,39 @@
     </head>
     
     <body>
-    <main>
-        <section id="left">
-            <div id="timeDisplay">
-                Time played:
-                <div></div>
-            </div>
-            <div id="turnDisplay">
-                <div></div>
-                Turn
-            </div>
-            <!-- (optional) quit button, may be better to remove it-->
-            <form action="/" method="GET">
-                <button type="submit">QUIT</button>
-            </form>
-            <img src="images/bombarded battleship.png">
-        </section>
+        <main>
+            <section id="left">
+                <div id="timeDisplay">
+                    Time played:
+                    <div>0:00</div>
+                </div>
+                <div id="turnDisplay">
+                    <div></div>
+                    Turn
+                </div>
+                <form action="/" method="GET">
+                    <button type="submit">QUIT</button>
+                </form>
+                <img src="images/bombarded battleship.png">
+            </section>
 
-        <section id="right">
-            <div id="instruction">Waiting for one more player to join...</div>
-            <div id="you">
-                <h1>Your sea</h1>
-                <div id="gameboardYou"></div>
-                <div id="shipsLeftYou">Your ships left: <span>5</span></div>
-            </div>
-            <div id = "opponent">
-                <h1>Opponents sea</h1>
-                <div id="gameboardOpp"></div>
-                <div id="shipsLeftOpp">Opponents ships left: <span >5</span>
-                </div> 
-            </div>
-                                                                            
-        </section>
-                
-    </main>
+            <section id="right">
+                <div id="instruction">Waiting for one more player to join...</div>
+                <div id="you">
+                    <h1>Your sea</h1>
+                    <div id="gameboardYou"></div>
+                    <div id="shipsLeftYou">
+                        Your ships left: <span>5</span>
+                    </div>
+                </div>
+                <div id="opponent">
+                    <h1>Opponents sea</h1>
+                    <div id="gameboardOpp"></div>
+                    <div id="shipsLeftOpp">
+                        Opponents ships left: <span>5</span>
+                    </div> 
+                </div>                                                 
+            </section>             
+        </main>
     </body>
 </html>

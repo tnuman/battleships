@@ -16,16 +16,16 @@ body {
 h1 {
     text-align: center;
     color: rgb(122, 120, 120);
-    font-size: 400%;
+    font-size: 450%;
     font-family: 'UnifrakturMaguntia', serif;
     position: relative;
     top: 30px;
 }
 
 #ship {
-    position: relative;
-    left: 80px;
-    bottom: -129px;
+    position: fixed;
+    left: 10%;
+    bottom: 23%;
     height: 55%;
     z-index: 1;
 }
@@ -41,19 +41,20 @@ button {
 
 #play {
     position: fixed;
-    right: 80px;
-    top: 190px;
+    right: 7%;
+    top: 27%;
     height: 25%;
 }
 
 #rules {
     position: fixed;
-    right: 80px;
-    top: 290px;
+    right: 7%;
+    top: 42%;
     height: 25%;
 }
 
 footer{
+    background-image: url("paper.gif");
     background-color: var(--sea);
     position: fixed;
     bottom: 0;

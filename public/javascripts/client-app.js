@@ -3,7 +3,6 @@ var main = function() {
     var socket = new WebSocket("ws://localhost:3000");
     
     var shipsPlaced = 0;
-    var waiting = true;
     var myTurn = false;
     var setupPhase = false;
     var timer = false;
@@ -27,7 +26,7 @@ var main = function() {
     }, 1000);
 
     // click event for placing ships
-    $("#you #gameboardYou td").on("click", function() {
+    $("#gameboardYou td").on("click", function() {
         if (setupPhase) {
             var $cell = $(this);
             
@@ -38,29 +37,52 @@ var main = function() {
             socket.send(JSON.stringify(message));
         }
     });
+
+    // hover event for creating a silhouette of a ship (when placing ships)
+    $("#gameboardYou td").hover(
+        function() {  
+            var $cell = $(this);          
+            var row = $cell.attr("row");
+            var col = parseInt($cell.attr("col"));      //needs to be parsed to an int, because we will do calculations with the col value
+            if (col + shipsPlaced <= 9) {
+                var available = true;
+                for (var i = 0; i < (shipsPlaced + 1); i++) {
+                    if ($("#Y" + row + (col + i)).attr("class") != "empty"){
+                    available = false;
+                    }
+                } 
+                if (available === true) {
+                    for (var i = 0; i < (shipsPlaced + 1); i++) {
+                        $("#Y" + row + (col + i)).addClass("selected");
+                    } 
+                }
+            }
+        }, function() {            
+            var $cell = $(this);
+            var row = $cell.attr("row");
+            var col = $cell.attr("col");
+            for (var i = 0; i < (shipsPlaced + 1); i++) {
+                $("#Y" + row + col).removeClass("selected");
+                col++;
+            }
+    });
     
     // click event for guessing opponents ships
-    $("#opponent #gameboardOpp td").on("click", function() {
-        if (!waiting && !setupPhase) {
-            if(myTurn) {
-                var $cell = $(this);
+    $("#gameboardOpp td").on("click", function() {
+        if(myTurn) {
+            var $cell = $(this);
+            
+            // check whether the cell is still empty
+            if ($cell.attr("class") === "empty") {
+                // notify the server where the player guessed
+                let message = Messages.O_GUESS;
+                message.row = $cell.attr("row");
+                message.col = $cell.attr("col");        
+                socket.send(JSON.stringify(message));
                 
-                // check whether the cell is still empty
-                if ($cell.attr("class") === "empty") {
-                    // notify the server where the player guessed
-                    let message = Messages.O_GUESS;
-                    message.row = $cell.attr("row");
-                    message.col = $cell.attr("col");        
-                    socket.send(JSON.stringify(message));
-                    
-                    myTurn = false;
-                    $("#turnDisplay div").text("Your");
-                } else {
-                    alert("You already clicked this cell. Shoot somewhere else!");
-                }     
-            } else {
-                alert("It's not your turn! Please wait for your opponent to shoot.");
-            }
+                myTurn = false;
+                $("#turnDisplay div").text("Your");
+            } 
         }
     });
 
@@ -80,7 +102,7 @@ var main = function() {
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
             $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
-            waiting = false;
+            $("#gameboardYou").addClass("active");
             setupPhase = true;
             timer = true;
         }
@@ -95,24 +117,26 @@ var main = function() {
                 + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
             } else {
                 $("#instruction").text("Waiting for your opponent to place his ships");
+                $("#gameboardYou").removeClass("active");
+                setupPhase = false;  
             }
         }
 
         // if YOUR_TURN message, set myTurn to true and modify the turnDisplay and instruction                                
         if(incomingMsg.type === Messages.T_YOUR_TURN) {
-            setupPhase = false;
             myTurn = true;
             $("#turnDisplay").show();
             $("#turnDisplay div").text("Your");
-            $("#instruction").text("Click anywhere in your opponent's sea to make a guess");            
+            $("#instruction").text("Click somewhere in your opponent's sea to make a guess");
+            $("#gameboardOpp").addClass("active");                  
         }
 
         // if OPPONENT_TURN message, modify the turnDisplay and instruction
         if(incomingMsg.type === Messages.T_OPPONENT_TURN) {
-            setupPhase = false;
             $("#turnDisplay").show();
             $("#turnDisplay div").text("Opponents");
             $("#instruction").text("Waiting for your opponent to shoot");
+            $("#gameboardOpp").removeClass("active"); 
         }
 
         // if UPDATE_OPPONENT message, update the entire view of the opponent

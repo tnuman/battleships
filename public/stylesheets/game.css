@@ -1,8 +1,106 @@
-/* TODO: MAKE CSS FILE FOR GAMESCREEN*/
 
 :root {
   --darkblue: #020336;
   --sea: #176B76;
+}
+
+/* Sidebar (left) **************************************************/
+
+#left {
+  height: 100%;
+  width: 250px;
+  position: fixed; 
+  left: 0;
+  top: 0;
+  background-color: var(--darkblue);
+  overflow-x: hidden;
+  padding-top: 20px;
+  color: white;
+  text-align: center;
+  font-size: 35px;
+  font-family: Impact, 'Arial Narrow Bold', sans-serif;
+  border: 1px solid var(--darkblue);
+}
+
+#timeDisplay {
+  margin-top: 15px;
+}
+
+#timeDisplay div {
+  font-size: 50px;
+  position: relative;
+  top: 10px;
+}
+
+#turnDisplay {
+  display: none;
+  position: relative;
+  top: 20%;
+  background-color: white;
+  border: 2px solid white;
+  color: var(--darkblue);
+  font-size: 150%;
+}
+
+#left button {
+  position: absolute;
+  width: 50%;
+  bottom: 7%;
+  left: 25%;
+  display: inline-block;
+  border-radius: 4px;
+  font-size: 40px;
+  background-color: var(--sea);
+  color: white;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#left button:hover {
+  background-color: white;
+  color: var(--sea);
+  cursor: pointer;
+}
+
+#left img {
+  width: 85%;
+  position: absolute;
+  bottom: 16%;
+  left: 9%;
+}
+
+/* Game objects (right) **************************************************/
+
+#right {
+  text-align: center;
+  margin-left: 250px;
+  margin-top: 70px;
+  color: var(--darkblue);
+  font-size: 20px;
+  animation: moveUp 1.5s;   /* We moesten een animatie maken, dus ik heb dit maar gedaan */
+}
+
+@keyframes moveUp {       
+  from {
+    transform: translate(0px, 1000px)
+  }
+  to {
+    transform: translate(0)
+  }
+}
+
+#instruction {
+  margin-bottom: 50px;
+  font-size: 25px;
+}
+
+h1 {
+  font-size: 30px;
+  font-family: Impact, 'Arial Narrow Bold', sans-serif;
+}
+
+h1::after, h1::before {
+  content: " ~~~ ";         /* We moesten deze 'pseudo-elements' gebruiken, dus ik heb dit maar gedaan. Prima of weet jij iets beters? */
 }
 
 table {
@@ -17,7 +115,6 @@ td {
 
 td.empty {
   background-color: white;
-  cursor: pointer;
 }
 
 td.ship {
@@ -36,103 +133,45 @@ td.sunk {
   background-color: black;
 }
 
-#left {
-  height: 100%;
-  width: 250px;
-  position: fixed; 
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: var(--darkblue);
-  overflow-x: hidden;
-  padding-top: 20px;
-  color: white;
-  text-align: center;
-  font-size: 40px;
-  font-family: fantasy;
-}
-
-#turnDisplay {
-  display: none;
-  margin-top: 100%;
-}
-
-#left button {
-  position: absolute;
-  width: 80%;
-  bottom: 175px;
-  left: 25px;
-  display: inline-block;
-  border-radius: 4px;
-  font-size: 70px;
-  background-color: var(--sea);
-  color: white;
-  border: none;
-  transition-duration: 0.4s;
-}
-
-#left button:hover {
-  background-color: white;
-  color: var(--sea);
-}
-
-#left img {
-  width: 250px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-}
-
-#right {
-  text-align: center;
-  margin-left: 250px;
-  margin-top: 80px;
-  color: var(--darkblue);
-  font-size: 20px;
-}
-
-#instruction {
-  margin-bottom: 50px;
-  font-size: 25px;
-}
+/* 'You'-part **************************************************/
 
 #you {
   float: left;
   margin-left: 10%;
 }
 
-#opponent {
-  margin-right: 10%;
-  float: right;
-}
-
-#gameboardOpp td.empty {
-  cursor: url(./crosshair.cur), pointer;
-}
-
-#gameboardOpp td.empty:hover {
-  background-color: orange;
+/* Hover event in js gives cells the active class*/
+#gameboardYou.active td.selected {
+  background-color: grey;
   filter: opacity(30%);
-}
-
-#gameboardOpp td.empty:active {
-  background-color: orange;
-  filter: none;
+  cursor: pointer;
 }
 
 #shipsLeftYou {
   margin-top: 20px;
 }
 
+/* 'Opponent'-part **************************************************/
+
+#opponent {
+  margin-right: 10%;
+  float: right;
+}
+
+#gameboardOpp.active td.empty {
+  cursor: url(../images/crosshair.cur), pointer;
+}
+
+#gameboardOpp.active td.empty:hover {
+  background-color: grey;
+  filter: opacity(30%);
+}
+
+#gameboardOpp.active td.empty:active {
+  background-color: grey;
+  filter: none;
+}
+
 #shipsLeftOpp {
-  margin-top: 20px;
-}
-
-h1 {
-  font-size: 30px;
-  font-family: fantasy;
-}
-
-#timeDisplay {
   margin-top: 20px;
 }
