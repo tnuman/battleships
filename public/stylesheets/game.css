@@ -1,9 +1,18 @@
 /* TODO: MAKE CSS FILE FOR GAMESCREEN*/
 
+:root {
+  --darkblue: #020336;
+  --sea: #176B76;
+}
+
+table {
+  margin: 10px 10px 10px 10px;
+}
+
 td {
   width: 40px;
   height: 40px;
-  border: solid grey;
+  border: 2px solid grey;
 }
 
 td.empty {
@@ -27,10 +36,90 @@ td.sunk {
   background-color: black;
 }
 
-#gameboardOpp td.empty {
-  cursor: url(./crosshair.cur), pointer;
+#left {
+  height: 100%;
+  width: 250px;
+  position: fixed; 
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: var(--darkblue);
+  overflow-x: hidden;
+  padding-top: 20px;
+  color: white;
+  text-align: center;
+  font-size: 40px;
 }
 
 #turnDisplay {
   display: none;
+  margin-top: 100%;
 }
+
+#left button {
+  position: absolute;
+  width: 80%;
+  bottom: 175px;
+  left: 25px;
+  display: inline-block;
+  border-radius: 4px;
+  font-size: 70px;
+  background-color: var(--sea);
+  color: white;
+  border: none;
+  transition-duration: 0.4s;
+}
+
+#left button:hover {
+  background-color: white;
+  color: var(--sea);
+}
+
+#left button:active {
+  
+}
+
+#left img {
+  width: 250px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
+#right {
+  text-align: center;
+  margin-left: 250px;
+  margin-top: 80px;
+  color: var(--darkblue);
+  font-size: 20px;
+}
+
+#instruction {
+  margin-bottom: 50px;
+  font-size: 30px;
+}
+
+#you {
+  float: left;
+  margin-left: 10%;
+}
+
+#opponent {
+  margin-right: 10%;
+  float: right;
+}
+
+#gameboardOpp td.empty {
+  cursor: url(./crosshair.cur), pointer;
+}
+
+#gameboardOpp td.empty:hover {
+  background-color: orange;
+  filter: opacity(30%);
+}
+
+#gameboardOpp td.empty:active {
+  background-color: orange;
+  filter: none;
+}
+
