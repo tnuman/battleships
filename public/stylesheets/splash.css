@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=UnifrakturMaguntia');
+
 :root {
     --darkblue: #020336;
     --sea: #176B76;
@@ -5,8 +7,70 @@
 
 body {
     background-color: var(--darkblue);
+    font-size: 100%;
+    position: fixed;
+    width: 100%;
+    height: 30%;
+}
+
+h1 {
+    text-align: center;
+    color: rgb(122, 120, 120);
+    font-size: 400%;
+    font-family: 'UnifrakturMaguntia', serif;
+    position: relative;
+    top: 30px;
+}
+
+#ship {
+    position: relative;
+    left: 80px;
+    bottom: -129px;
+    height: 55%;
+    z-index: 1;
+}
+
+button {
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+
+#play {
+    position: fixed;
+    right: 80px;
+    top: 190px;
+    height: 25%;
+}
+
+#rules {
+    position: fixed;
+    right: 80px;
+    top: 290px;
+    height: 25%;
 }
 
 footer{
     background-color: var(--sea);
+    position: fixed;
+    bottom: 0;
+    height: 30%;
+    width: 100%;
+    font-size: 110%;
+    font-family: Impact, 'Arial Narrow Bold', sans-serif;
+}
+
+#GamesStarted{
+    float: left;
+}
+
+#GamesOngoing{
+    float: center;
+}
+
+#ShipsSunk{
+    float: right;
 }
