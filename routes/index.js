@@ -1,9 +1,9 @@
 var express = require("express");
 var router = express.Router();
 
-/* Go to plashscreen */
+//Go to splashscreen
 router.get("/", function (req, res) {
-    res.sendFile("splash.html", {root: "./public"});
+    res.sendFile("splash.ejs", {root: "./public"});
 });
 
 /* Go to gamescreen when pressing the play button */

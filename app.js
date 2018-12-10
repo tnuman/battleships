@@ -17,10 +17,9 @@ const wss = new websocket.Server({ server });
 
 app.get("/play", indexRouter);
 
-/*TODO: render splaschreen
 app.get("/", (req, res) => {
-    res.render("splash.ejs", { templatename: data, templatename: data etc. });
-});*/
+    res.render("splash.ejs", { gamesStarted: gameStats.gamesStarted, gamesOngoing: gameStats.gamesOngoing, shipsSunk: gameStats.shipsSunk});
+});
 
 var websockets = {}; // property: websocket, value: game
 
@@ -54,7 +53,7 @@ setInterval(function(){
     }     
 }, 2000);
 
-var currentGame = new game(gameStats.gamesStarted++);
+var currentGame = new game(gameStats.gamesStarted);
 var connectionID = 0;//each websocket receives a unique ID
 
 wss.on("connection", function connection(ws) {
@@ -73,8 +72,10 @@ wss.on("connection", function connection(ws) {
         currentGame.setStatus("SETUP");
         currentGame.socketA.send(messages.S_PLACE_SHIP);
         currentGame.socketB.send(messages.S_PLACE_SHIP);
+        gameStats.gamesOngoing++;
+        gameStats.gamesStarted++;
 
-        currentGame = new game(gameStats.gamesStarted++);
+        currentGame = new game(gameStats.gamesStarted);
     }
 
     /*
@@ -127,6 +128,7 @@ wss.on("connection", function connection(ws) {
                 if (gameObj.playerB.hasLost()) {
                     // update the 'shipsSunk'-stat and set the status to 'A WON'
                     gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft();
+                    gameStats.gamesOngoing--;
                     gameObj.setStatus("A WON");
                     
                     // first wait for the tables to update, then tell player A he won (data === true)
@@ -189,6 +191,7 @@ wss.on("connection", function connection(ws) {
                 if (gameObj.playerA.hasLost()) {
                     // update the 'shipsSunk'-stat and set the status to 'B WON'
                     gameStats.shipsSunk += 10 - gameObj.playerB.shipsLeft(); 
+                    gameStats.gamesOngoing--;
                     gameObj.setStatus("B WON");
                     
                     // first wait for the tables to update, tell player A he lost (data === false)
@@ -230,7 +233,8 @@ wss.on("connection", function connection(ws) {
         // try to abort the game, else the game is already completed
         if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
             // update the 'shipsSunk'-stat and set the status to 'ABORTED'
-            gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft();  
+            gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft(); 
+            gameStats.gamesOngoing--; 
             gameObj.setStatus("ABORTED");
 
             if (con === gameObj.socketA) {

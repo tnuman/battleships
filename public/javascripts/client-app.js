@@ -3,6 +3,7 @@ var main = function() {
     var socket = new WebSocket("ws://localhost:3000");
     
     var shipsPlaced = 0;
+    var waiting = true;
     var myTurn = false;
     var setupPhase = false;
     var timer = false;
@@ -40,24 +41,26 @@ var main = function() {
     
     // click event for guessing opponents ships
     $("#opponent #gameboardOpp td").on("click", function() {
-        if(myTurn) {
-            var $cell = $(this);
-            
-            // check whether the cell is still empty
-            if ($cell.attr("class") === "empty") {
-                // notify the server where the player guessed
-                let message = Messages.O_GUESS;
-                message.row = $cell.attr("row");
-                message.col = $cell.attr("col");        
-                socket.send(JSON.stringify(message));
+        if (!waiting && !setupPhase) {
+            if(myTurn) {
+                var $cell = $(this);
                 
-                myTurn = false;
-                $("#turnDisplay div").text("Your");
+                // check whether the cell is still empty
+                if ($cell.attr("class") === "empty") {
+                    // notify the server where the player guessed
+                    let message = Messages.O_GUESS;
+                    message.row = $cell.attr("row");
+                    message.col = $cell.attr("col");        
+                    socket.send(JSON.stringify(message));
+                    
+                    myTurn = false;
+                    $("#turnDisplay div").text("Your");
+                } else {
+                    alert("You already clicked this cell. Shoot somewhere else!");
+                }     
             } else {
-                alert("You already clicked this cell. Shoot somewhere else!");
-            }     
-        } else {
-            alert("It's not your turn! Please wait for your opponent to shoot.");
+                alert("It's not your turn! Please wait for your opponent to shoot.");
+            }
         }
     });
 
@@ -77,6 +80,7 @@ var main = function() {
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
             $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+            waiting = false;
             setupPhase = true;
             timer = true;
         }
@@ -91,12 +95,12 @@ var main = function() {
                 + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
             } else {
                 $("#instruction").text("Waiting for your opponent to place his ships");
-                setupPhase = false;
             }
         }
 
         // if YOUR_TURN message, set myTurn to true and modify the turnDisplay and instruction                                
         if(incomingMsg.type === Messages.T_YOUR_TURN) {
+            setupPhase = false;
             myTurn = true;
             $("#turnDisplay").show();
             $("#turnDisplay div").text("Your");
@@ -105,6 +109,7 @@ var main = function() {
 
         // if OPPONENT_TURN message, modify the turnDisplay and instruction
         if(incomingMsg.type === Messages.T_OPPONENT_TURN) {
+            setupPhase = false;
             $("#turnDisplay").show();
             $("#turnDisplay div").text("Opponents");
             $("#instruction").text("Waiting for your opponent to shoot");

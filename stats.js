@@ -5,8 +5,8 @@
 
 var gameStats = {
     since : Date.now(),     /* since we keep it simple and in-memory, keep track of when this object was created */
-    gamesStarted : 0,       /* number of games initialized */
-    gamesCompleted : 0,     /* number of games successfully completed */
+    gamesStarted : 0,       /* number of games started */
+    gamesOngoing : 0,     /* number of games currently ongoing */
     shipsSunk : 0           // total number of ships that have sunk
 };
 

@@ -59,18 +59,34 @@ footer{
     bottom: 0;
     height: 30%;
     width: 100%;
-    font-size: 110%;
-    font-family: Impact, 'Arial Narrow Bold', sans-serif;
 }
 
 #GamesStarted{
-    float: left;
+    left: 150px;
 }
 
 #GamesOngoing{
-    float: center;
+    left: 650px;
+}
+
+footer>div{
+    position: fixed;
+    bottom: 90px;
+    font-size: 150%;
+    font-family: Impact, 'Arial Narrow Bold', sans-serif;
+    text-align: center;
 }
 
 #ShipsSunk{
-    float: right;
+    right: 150px;
+}
+
+#visits {
+    padding-top: 20px;
+    padding-right: 20px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    color: var(--sea);
+    font-size: 24px;
 }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Battleships - menu</title>
+        <link rel="stylesheet" href="./stylesheets/reset.css">
+        <link rel="stylesheet" href="stylesheets/splash.css">
+        <script src="./javascripts/jquery-3.3.1.min.js"></script>
+        <script src="./javascripts/splash.js"></script>
+    </head>
+
+    <body>
+    <header>
+        <h1>Battleships: the game</h1>
+    </header>
+
+    <main>
+        <img src="images/bombarded battleship.png" id="ship">
+        <form action="/play" method="GET">
+            <button type="submit"><img src="images/Play button.png" alt="Play"  id="play"></button>
+        </form>
+        <form action="https://en.wikipedia.org/wiki/Battleship_(game)" method="GET" target="_blank">
+            <button type="submit"><img src="images/Rules button.png" alt="Rules" id="rules"></button>
+        </form>
+        <div id="visits">
+            Visits:
+            <span id="displayVisits"></span>
+        <div>
+    </main>
+
+    <footer>
+        <div id="GamesStarted">
+            Total games started:
+            <span><%= gamesStarted %></span> 
+        </div>
+        <div id="GamesOngoing">
+            Games currently ongoing:
+            <span><%= gamesOngoing %></span>
+        </div>
+        <div id="ShipsSunk"> 
+            Total ships sunk:
+            <span><%= shipsSunk %></span>
+        </div>
+    </footer>
+    </body>
+</html>

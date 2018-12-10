@@ -49,6 +49,7 @@ td.sunk {
   color: white;
   text-align: center;
   font-size: 40px;
+  font-family: fantasy;
 }
 
 #turnDisplay {
@@ -75,10 +76,6 @@ td.sunk {
   color: var(--sea);
 }
 
-#left button:active {
-  
-}
-
 #left img {
   width: 250px;
   position: fixed;
@@ -96,7 +93,7 @@ td.sunk {
 
 #instruction {
   margin-bottom: 50px;
-  font-size: 30px;
+  font-size: 25px;
 }
 
 #you {
@@ -123,3 +120,19 @@ td.sunk {
   filter: none;
 }
 
+#shipsLeftYou {
+  margin-top: 20px;
+}
+
+#shipsLeftOpp {
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 30px;
+  font-family: fantasy;
+}
+
+#timeDisplay {
+  margin-top: 20px;
+}
