@@ -28,8 +28,7 @@
 
 #timeDisplay div {
   font-size: 50px;
-  position: relative;
-  top: 10px;
+  margin-top: 10px;
 }
 
 #turnDisplay {
@@ -72,6 +71,7 @@
 /* Game objects (right) **************************************************/
 
 #right {
+  min-width: 1100px;
   text-align: center;
   margin-left: 250px;
   margin-top: 70px;
