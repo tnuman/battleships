@@ -1,4 +1,4 @@
-/* TODO: :hover, :active, ::after, ::before, animation, transition */
+/* TODO: ::after, ::before */
 
 @import url('https://fonts.googleapis.com/css?family=UnifrakturMaguntia');
 
@@ -31,13 +31,22 @@ h1 {
     height: 55%;
     z-index: 1;
     opacity: 0.9;
+    animation: moveShip 3.5s;
+}
+
+@keyframes moveShip {       
+    from {
+        transform: translate(-900px, 0)
+    }
+    to {
+        transform: translate(0, 0)
+    }
 }
 
 button {
     background-color: Transparent;
     background-repeat: no-repeat;
     border: none;
-    cursor: pointer;
     overflow: hidden;
     outline: none;
 }
@@ -48,6 +57,7 @@ button {
     top: 25%;
     height: 25%;
     z-index: 2;
+    transition: height 0.5s;
 }
 
 #rules {
@@ -56,6 +66,16 @@ button {
     top: 42%;
     height: 25%;
     z-index: 2;
+    transition: height 0.5s;
+}
+
+#play:hover, #rules:hover {
+    cursor: pointer;
+    height: 30%;
+}
+
+#play:active, #rules:active {
+    opacity: 0.6;
 }
 
 footer{
@@ -73,19 +93,26 @@ footer{
 
 footer>div{
     position:relative;
-    margin-top: 115px;
+    padding-top: 115px;
     font-size: 150%;
     font-family: Impact, 'Arial Narrow Bold', sans-serif;
     text-align: center;
     width: 33.3%;
 }
 
+footer>div::before , footer>div::after{
+    content: "~";
+}
+
 #visits {
-    padding-top: 20px;
-    padding-right: 20px;
+    margin-top: 20px;
+    margin-right: 20px;
+    padding: 5px 5px 5px 5px;
     position: fixed;
     top: 0;
     right: 0;
     color: var(--sea);
     font-size: 24px;
+    border: 2px solid var(--sea);
+    background-color: rgb(158, 156, 156);
 }
