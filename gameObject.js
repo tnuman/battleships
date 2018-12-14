@@ -21,7 +21,7 @@ var game = function(gameID) {
 
     Then you actually get the MVC structure and I think this is the most practical
     */
-}
+};
 
 // states the game can have
 game.prototype.transitionStates = {};
@@ -50,11 +50,6 @@ game.prototype.transitionMatrix = [
 
 // indicates whether the transition from 'from' to 'to' is valid
 game.prototype.isValidTransition = function (from, to) {
-    
-    console.assert(typeof from === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof from);
-    console.assert(typeof to === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof to);
-    console.assert(from in game.prototype.transitionStates === true, "%s: %s should be a valid transition state", arguments.callee.name, from);
-    console.assert(to in game.prototype.transitionStates === true, "%s: %s should be a valid transition state", arguments.callee.name, to);
 
     var s1, s2;
     if (!game.prototype.isValidState(from)) {
@@ -78,12 +73,10 @@ game.prototype.isValidState = function (s) {
 // indicates whether the game has a final state
 game.prototype.hasFinalState = function () {
     return (this.transitionStates[this.gameState] >= 6);
-}
+};
 
 // sets the status of this game to 'to', provided that 'to' is a valid state and the transition is valid
 game.prototype.setStatus = function (to) {
-
-    console.assert(typeof to === "string", "%s: String expected, but got a %s", arguments.callee.name, typeof to);
 
     if (game.prototype.isValidState(to) && game.prototype.isValidTransition(this.gameState, to)) {
         this.gameState = to;
@@ -99,8 +92,6 @@ game.prototype.hasTwoConnectedPlayers = function () {
 };
 
 game.prototype.addPlayer = function (p) {
-
-    console.assert(p instanceof Object, "%s: Websocket expected, but got a %s", arguments.callee.name, typeof p);
 
     if (this.gameState != "0 JOINT" && this.gameState != "1 JOINT") {
         return new Error("Can't add a new player, the current state is %s", this.gameState);

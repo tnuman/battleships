@@ -101,7 +101,7 @@ var main = function() {
         // if PLACE_SHIP message, allow the player to place their ships
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
-            $("#instruction").text("Place your ship of length 1 somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+            $("#instruction").text("Place your ship of length 1 somewhere in your sea.");
             $("#gameboardYou").addClass("active");
             setupPhase = true;
             timer = true;
@@ -114,7 +114,7 @@ var main = function() {
             //manipulating instruction text
             if(shipsPlaced + 1 <= 5) {
                 $("#instruction").text("Place your ship of length " + String(shipsPlaced + 1)
-                + " somewhere in your sea. The cell you click will be the leftmost part of the ship.");
+                + " somewhere in your sea.");
             } else {
                 $("#instruction").text("Waiting for your opponent to place his ships");
                 $("#gameboardYou").removeClass("active");
@@ -157,8 +157,8 @@ var main = function() {
             console.log(incomingMsg.data);
             endGame(incomingMsg.data);            
         }
-    }
-}
+    };
+};
 // executes main when the JavaScript file has been loaded
 $(document).ready(main);
 
@@ -174,7 +174,7 @@ var displayTimer = function(minutes, seconds) {
 }
 
 // informs the player if he has won/lost the game
-function endGame(hasWon) {
+var endGame = function(hasWon) {
     if(hasWon === true) {
         alert("You won!");
     } else {

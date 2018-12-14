@@ -71,7 +71,7 @@
 /* Game objects (right) **************************************************/
 
 #right {
-  min-width: 1120px;
+  min-width: 1116px;
   text-align: center;
   margin-left: 250px;
   margin-top: 70px;
@@ -174,4 +174,21 @@ td.sunk {
 
 #shipsLeftOpp {
   margin-top: 20px;
+}
+
+#warning {
+  display: none;
+}
+
+@media screen and (max-width: 1366px) {
+  #warning {
+    display: block;
+    background-color: red;
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    top:0;
+    text-align: center;
+    color: white;
+  }
 }

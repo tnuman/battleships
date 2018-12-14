@@ -47,6 +47,7 @@ button {
     right: 7%;
     top: 25%;
     height: 25%;
+    z-index: 2;
 }
 
 #rules {
@@ -54,6 +55,7 @@ button {
     right: 7%;
     top: 42%;
     height: 25%;
+    z-index: 2;
 }
 
 footer{

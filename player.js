@@ -23,10 +23,10 @@ var player = function()  {
     [0,0,0,0,0,0,0,0,0,0],
 	[0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0]
-    ]
+    ];
 
     // ships of the player
-    this.ships = [new ship(1), new ship(2), new ship(3), new ship(4), new ship(5)]
+    this.ships = [new ship(1), new ship(2), new ship(3), new ship(4), new ship(5)];
     
     // return the number of ships that haven't sunken yet
     this.shipsLeft = function() {
@@ -37,7 +37,7 @@ var player = function()  {
             }
         }
         return count;
-    }
+    };
 
     // allows to place a ship on the board, given it's leftmost coordinate and length
     this.placeShip = function (row, col) {
@@ -57,7 +57,7 @@ var player = function()  {
             return true;
         }
         
-    }
+    };
 
     // allows to update the status of a cell, given it's row and col value
     this.updateCellStatus = function (row, col) {
@@ -88,18 +88,18 @@ var player = function()  {
         } else {
             return false;
         }
-    }
+    };
 
     // get the status of a cell, given it's row and col value
     this.getCellStatus = function (row, col) {
         return this.board[row][col];
-    }
+    };
 
         // returns true if the opponent sank all ships of the player
     this.hasLost = function () {
         // when there are 15 hits on the players ships (total length of all ships), the player has lost
         return this.hitCount === 15;
-    }
-}
+    };
+};
 
 module.exports = player;

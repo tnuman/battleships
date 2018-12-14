@@ -41,7 +41,7 @@
     /*
     / Server to client: your turn to make a guess
     */
-    exports.T_YOUR_TURN = "YOUR-TURN"
+    exports.T_YOUR_TURN = "YOUR-TURN";
     exports.O_YOUR_TURN = {
         type: exports.T_YOUR_TURN
     };
@@ -50,7 +50,7 @@
     /*
     / Server to client: wait for the opponent to finish his turn
     */
-   exports.T_OPPONENT_TURN = "OPPONENT-TURN"
+   exports.T_OPPONENT_TURN = "OPPONENT-TURN";
    exports.O_OPPONENT_TURN = {
        type: exports.T_OPPONENT_TURN
    };

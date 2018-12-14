@@ -21,7 +21,7 @@ app.get("/", (req, res) => {
     res.render("splash.ejs", { gamesStarted: gameStats.gamesStarted, gamesOngoing: gameStats.gamesOngoing, shipsSunk: gameStats.shipsSunk});
 });
 
-var websockets = {}; // property: websocket, value: game
+var websockets = {}; // array of websockets (property), each with a value game
 
 // to regularly clean up the web sockets (each minute)
 setInterval(function() {
@@ -54,7 +54,7 @@ setInterval(function(){
 }, 2000);
 
 var currentGame = new game(gameStats.gamesStarted);
-var connectionID = 0;//each websocket receives a unique ID
+var connectionID = 0;
 
 wss.on("connection", function connection(ws) {
     // add the connected player
@@ -65,9 +65,8 @@ wss.on("connection", function connection(ws) {
 
     console.log("Player %s placed in game %s", con.id, currentGame.id);
 
-    /*
-     * if the current game has two players, inform the players and create a new game for the next player(s) to connect
-     */ 
+    
+    //if the current game has two players, inform the players and create a new game for the next player(s) to connect 
     if (currentGame.hasTwoConnectedPlayers()) {
         currentGame.setStatus("SETUP");
         currentGame.socketA.send(messages.S_PLACE_SHIP);
@@ -78,11 +77,9 @@ wss.on("connection", function connection(ws) {
         currentGame = new game(gameStats.gamesStarted);
     }
 
-    /*
-     * Messages coming in from a player:
-     * 1. Ship placed
-     * 2. Guessed (cell)     
-     */
+    /* Messages coming in from a player:
+     1. Ship placed
+     2. Guessed (cell) */
     con.on("message", function incoming(message) {
         
         let msg = JSON.parse(message);
@@ -135,14 +132,14 @@ wss.on("connection", function connection(ws) {
                     setTimeout(function() {
                         let messageToA = messages.O_GAME_OVER;
                         messageToA.data = true;
-                        gameObj.socketA.send(JSON.stringify(messageToA))
+                        gameObj.socketA.send(JSON.stringify(messageToA));
                     }, 750);
 
                     // first wait for the tables to update, tell player B he lost (data === false)
                     setTimeout(function() {
                         let messageToB = messages.O_GAME_OVER;
                         messageToB.data = false;
-                        gameObj.socketB.send(JSON.stringify(messageToB))
+                        gameObj.socketB.send(JSON.stringify(messageToB));
                     }, 750);
                 } 
                 // else the game continues; tell player B it's his turn 
@@ -198,14 +195,14 @@ wss.on("connection", function connection(ws) {
                     setTimeout(function() {
                         let messageToA = messages.O_GAME_OVER;
                         messageToA.data = false;
-                        gameObj.socketA.send(JSON.stringify(messageToA))
+                        gameObj.socketA.send(JSON.stringify(messageToA));
                     }, 750);
                     
                     // first wait for the tables to update, tell player B he won (data === true)
                     setTimeout(function() {
                         let messageToB = messages.O_GAME_OVER;
                         messageToB.data = true;
-                        gameObj.socketB.send(JSON.stringify(messageToB))
+                        gameObj.socketB.send(JSON.stringify(messageToB));
                     }, 750); 
                 } 
                 // else the game continues; tell player A it's his turn
@@ -225,7 +222,7 @@ wss.on("connection", function connection(ws) {
         let gameObj = websockets[con.id]; 
             
         // if there was only onen player and he left, set the status to back to 0 joint
-        if(gameObj.gameState === "1 JOINT") {
+        if(gameObj.isValidTransition(gameObj.gameState, "0 JOINT")) {
             gameObj.socketA = null;
             gameObj.setStatus("0 JOINT");
         }
