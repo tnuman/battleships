@@ -8,6 +8,7 @@ var main = function() {
     var timer = false;
     var minutes = 0;
     var seconds = 0;
+    var fullscreen = false;
 
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
@@ -24,6 +25,21 @@ var main = function() {
             displayTimer(minutes, seconds);
         }
     }, 1000);
+
+    // click event for fullscreen
+    $("#fullscreen").on("click", function() {
+        if (!fullscreen) {
+            toFullscreen(document.documentElement);
+            fullscreen = true;
+            $("#max").hide();
+            $("#min").show();
+        } else {
+            exitFullscreen();
+            fullscreen = false;
+            $("#min").hide();
+            $("#max").show();
+        }
+    });
 
     // click event for placing ships
     $("#gameboardYou td").on("click", function() {
@@ -182,3 +198,32 @@ var endGame = function(hasWon) {
     }
 }
 
+// function to enter fullscreen
+function toFullscreen(elem) {
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // for Firefox
+      elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // for Chrome
+      elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // for IE/Edge
+      elem.msRequestFullscreen();
+    } else {
+        console.log("Fullscreen not supported for this browser");
+    }
+}
+  
+ // function to exit fullscreen
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // for Firefox
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // for Chrome
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // for IE/Edge
+        document.msExitFullscreen();
+    } else {
+        console.log("Fullscreen not supported for this browser");
+    }
+}
