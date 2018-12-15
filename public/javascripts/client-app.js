@@ -54,6 +54,11 @@ var main = function() {
         }
     });
 
+    // click event for rotating ship (when placing ships)
+    $("#rotate").on("click", function() {
+       console.log("clicked rotate"); // om te testen of ie werkt, haal maar weg als het gelukt is
+    });
+
     // hover event for creating a silhouette of a ship (when placing ships)
     $("#gameboardYou td").hover(
         function() {  
@@ -109,8 +114,9 @@ var main = function() {
         // if PLACE_SHIP message, allow the player to place their ships
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
-            $("#instruction").text("Place your ship of length 1 somewhere in your sea.");
+            $("#instruction").text("Place your ship of length 1 somewhere in your sea");
             $("#gameboardYou").addClass("active");
+            $("#rotate").show();
             setupPhase = true;
             timer = true;
         }
@@ -122,11 +128,12 @@ var main = function() {
             //manipulating instruction text
             if(shipsPlaced + 1 <= 5) {
                 $("#instruction").text("Place your ship of length " + String(shipsPlaced + 1)
-                + " somewhere in your sea.");
+                + " somewhere in your sea");
             } else {
                 $("#instruction").text("Waiting for your opponent to place his ships");
                 $("#gameboardYou").removeClass("active");
-                setupPhase = false;  
+                setupPhase = false;
+                $("#rotate").hide();
             }
         }
 

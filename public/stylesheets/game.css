@@ -41,23 +41,35 @@
   font-size: 150%;
 }
 
-#left button, #fullscreen {
+#left button, #rotate, #fullscreen {
   background-color: var(--sea);
   color: white;
-  position: absolute;
-  bottom: 7%;
   display: inline-block;
   border-radius: 4px;
   transition-duration: background-color 0.4s;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#rotate {
+  display: none;
+  position: relative;
+  margin-top: 55%;
+  margin-left: 50px;
+  width: 150px;
+  padding: 5px 5px 5px 5px;
 }
 
 #left button {
+  position: absolute;
+  bottom: 7%;
   left: 12%;
   font-size: 40px;
   border: none;
 }
 
 #fullscreen {
+  position: absolute;
+  bottom: 7%;
   right: 10%;
   width: 48px;
   height: 48px;
@@ -74,13 +86,13 @@
   display: none;
 }
 
-#left button:hover, #fullscreen:hover {
+#left button:hover, #fullscreen:hover, #rotate:hover {
   background-color: white;
   color: var(--sea);
   cursor: pointer;
 }
 
-#fullscreen:hover img {
+#fullscreen:hover img, #rotate:hover img {
   filter: invert(32%) sepia(36%) saturate(916%) hue-rotate(139deg) brightness(60%) contrast(90%);
 }
 
@@ -100,7 +112,7 @@
   margin-top: 70px;
   color: var(--darkblue);
   font-size: 20px;
-  animation: moveUp 1.5s;   /* We moesten een animatie maken, dus ik heb dit maar gedaan */
+  animation: moveUp 1.5s;   
 }
 
 @keyframes moveUp {       
@@ -123,7 +135,7 @@ h1 {
 }
 
 h1::after, h1::before {
-  content: " ~~~ ";         /* We moesten deze 'pseudo-elements' gebruiken, dus ik heb dit maar gedaan. Prima of weet jij iets beters? */
+  content: " ~~~ ";        
 }
 
 table {
@@ -233,7 +245,7 @@ td.sunk {
 :-webkit-full-screen #right {
   color: white;
 }
-:-webkit-full-screen #left button:hover, :-webkit-full-screen #fullscreen:hover {
+:-webkit-full-screen #left button:hover, :-webkit-full-screen #fullscreen:hover, :-webkit-full-screen #rotate:hover {
   border: 2px solid var(--sea);
 }
 :-webkit-full-screen #turnDisplay {
@@ -250,14 +262,14 @@ td.sunk {
 :-moz-full-screen {
   background-color: var(--darkblue);
 }
-:-moz-full-screen #gameboardYou.active td.selected, :-webkit-full-screen #gameboardOpp.active td.empty:hover{
+:-moz-full-screen #gameboardYou.active td.selected, :-moz-full-screen #gameboardOpp.active td.empty:hover{
   background-color: rgb(199, 198, 198);
   filter: opacity(99%);
 }
 :-moz-full-screen #right {
   color: white;
 }
-:-moz-full-screen #left button:hover, :-webkit-full-screen #fullscreen:hover {
+:-moz-full-screen #left button:hover, :-moz-full-screen #fullscreen:hover, :-moz-full-screen #rotate:hover {
   border: 2px solid var(--sea);
 }
 :-moz-full-screen #turnDisplay {
@@ -274,14 +286,14 @@ td.sunk {
 :-ms-full-screen {
   background-color: var(--darkblue);
 }
-:-ms-full-screen #gameboardYou.active td.selected, :-webkit-full-screen #gameboardOpp.active td.empty:hover{
+:-ms-full-screen #gameboardYou.active td.selected, :-ms-full-screen #gameboardOpp.active td.empty:hover{
   background-color: rgb(199, 198, 198);
   filter: opacity(99%);
 }
 :-ms-full-screen #right {
   color: white;
 }
-:-ms-full-screen #left button:hover, :-webkit-full-screen #fullscreen:hover {
+:-ms-full-screen #left button:hover, :-ms-full-screen #fullscreen:hover, :-ms-full-screen #rotate:hover {
   border: 2px solid var(--sea);
 }
 :-ms-full-screen #turnDisplay {
@@ -298,14 +310,14 @@ td.sunk {
 :fullscreen {
   background-color: var(--darkblue);
 }
-:fullscreen #gameboardYou.active td.selected, :-webkit-full-screen #gameboardOpp.active td.empty:hover{
+:fullscreen #gameboardYou.active td.selected, :fullscreen #gameboardOpp.active td.empty:hover{
   background-color: rgb(199, 198, 198);
   filter: opacity(99%);
 }
 :-moz-full-screen #right {
   color: white;
 }
-:fullscreen #left button:hover, :-webkit-full-screen #fullscreen:hover {
+:fullscreen #left button:hover, :fullscreen #fullscreen:hover, :fullscreen #rotate:hover {
   border: 2px solid var(--sea);
 }
 :fullscreen #turnDisplay {
