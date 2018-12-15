@@ -29,7 +29,7 @@ setInterval(function() {
         if(websockets.hasOwnProperty(i)){
             let gameObj = websockets[i];
             if(gameObj.hasFinalState()){
-                console.log("\tDeleting element "+i);
+                console.log("\tDeleting player "+i);
                 delete websockets[i];
             }
         }

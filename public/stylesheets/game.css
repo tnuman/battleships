@@ -203,7 +203,7 @@ td.sunk {
   display: none;
 }
 
-@media screen and (max-width: 1366px) {
+@media screen and (max-width: 1260px), screen and (max-height: 675px) {
   #warning {
     display: block;
     background-color: red;
@@ -216,7 +216,7 @@ td.sunk {
   }
 }
 
-/* fullscreen */
+/* Fullscreen */
 
 /* Chrome */
 :-webkit-full-screen #left {

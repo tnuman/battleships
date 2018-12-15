@@ -106,14 +106,6 @@ var main = function() {
     socket.onmessage = function (event) {
         let incomingMsg = JSON.parse(event.data);
 
-        // if GAME_ABORTED message, notify the player
-        if(incomingMsg.type === Messages.T_GAME_ABORTED) {
-            timer = false;
-            $("#turnDisplay").hide();
-            $("#instruction").text("GAME ABORTED");
-            alert("Your opponent left the game...");
-        }
-
         // if PLACE_SHIP message, allow the player to place their ships
         if(incomingMsg.type === Messages.T_PLACE_SHIP) {
             // manipulating instruction text
@@ -173,6 +165,14 @@ var main = function() {
             console.log(incomingMsg.data);
             endGame(incomingMsg.data);            
         }
+
+        // if GAME_ABORTED message, notify the player
+        if(incomingMsg.type === Messages.T_GAME_ABORTED) {
+            timer = false;
+            $("#turnDisplay").hide();
+            $("#instruction").text("GAME ABORTED");
+            alert("Your opponent left the game...");
+        }
     };
 };
 // executes main when the JavaScript file has been loaded
@@ -193,9 +193,12 @@ var displayTimer = function(minutes, seconds) {
 var endGame = function(hasWon) {
     if(hasWon === true) {
         alert("You won!");
+        $("#instruction").text("You won!");
     } else {
         alert("You lost :(");
+        $("#instruction").text("You lost...");
     }
+    $("#turnDisplay").hide();
 }
 
 // function to enter fullscreen
