@@ -128,7 +128,6 @@ var main = function() {
                 socket.send(JSON.stringify(message));
                 
                 myTurn = false;
-                $("#turnDisplay div").text("Your");
             } 
         }
     });
@@ -195,7 +194,7 @@ var main = function() {
         // if GAME_OVER message, call endGame with the provided boolean value
         if(incomingMsg.type === Messages.T_GAME_OVER) {
             timer = false;
-            console.log(incomingMsg.data);
+            $(".active").removeClass("active"); 
             endGame(incomingMsg.data);            
         }
 
@@ -203,6 +202,8 @@ var main = function() {
         if(incomingMsg.type === Messages.T_GAME_ABORTED) {
             timer = false;
             $("#turnDisplay").hide();
+            $("#rotate").hide();
+            $(".active").removeClass("active"); 
             $("#instruction").text("GAME ABORTED");
             alert("Your opponent left the game...");
         }
