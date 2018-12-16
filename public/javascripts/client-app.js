@@ -59,7 +59,6 @@ var main = function() {
     // click event for rotating ship (when placing ships)
     $("#rotate").on("click", function() {
         horizontal = !horizontal;
-       console.log(horizontal); // om te testen of ie werkt, haal maar weg als het gelukt is
     });
 
     // hover event for creating a silhouette of a ship (when placing ships)
