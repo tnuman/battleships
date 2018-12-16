@@ -1,6 +1,6 @@
 var main = function() {
     "use strict";
-    var socket = new WebSocket("ws://localhost:3000");
+    var socket = new WebSocket("ws://https://serene-earth-15493.herokuapp.com/");
     
     var shipsPlaced = 0;
     var myTurn = false;
