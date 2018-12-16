@@ -92,7 +92,7 @@ wss.on("connection", function connection(ws) {
 
             // if the message was 'SHIP_PLACED' (the player placed a ship)
             if(msg.type === messages.T_SHIP_PLACED) {
-                var shipAccepted = gameObj.playerA.placeShip(msg.row, msg.col);
+                var shipAccepted = gameObj.playerA.placeShip(msg.row, msg.col, msg.horizontal);
                 // if the ship is accepted, tell player A to update its own board
                 if (shipAccepted) {
                     
@@ -156,7 +156,7 @@ wss.on("connection", function connection(ws) {
             
             // if the message was 'SHIP_PLACED' (the player placed a ship)
             if(msg.type === messages.T_SHIP_PLACED) {
-                var shipAccepted = gameObj.playerB.placeShip(msg.row, msg.col);
+                var shipAccepted = gameObj.playerB.placeShip(msg.row, msg.col, msg.horizontal);
                 // if the ship is accepted, tell player B to update its own board
                 if (shipAccepted) {
                     let messageToB = messages.O_UPDATE_YOU;

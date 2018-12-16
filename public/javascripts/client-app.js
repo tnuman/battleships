@@ -9,6 +9,7 @@ var main = function() {
     var minutes = 0;
     var seconds = 0;
     var fullscreen = false;
+    var horizontal = true;
 
     // create tables that represent the gameboards
     createTable(document.getElementById("gameboardYou"), "Y");
@@ -50,13 +51,15 @@ var main = function() {
             let message = Messages.O_SHIP_PLACED;
             message.row = $cell.attr("row");
             message.col = $cell.attr("col");
+            message.horizontal = horizontal;
             socket.send(JSON.stringify(message));
         }
     });
 
     // click event for rotating ship (when placing ships)
     $("#rotate").on("click", function() {
-       console.log("clicked rotate"); // om te testen of ie werkt, haal maar weg als het gelukt is
+        horizontal = !horizontal;
+       console.log(horizontal); // om te testen of ie werkt, haal maar weg als het gelukt is
     });
 
     // hover event for creating a silhouette of a ship (when placing ships)
@@ -64,18 +67,36 @@ var main = function() {
         function() {  
             var $cell = $(this);          
             var row = $cell.attr("row");
-            var col = parseInt($cell.attr("col"));      //needs to be parsed to an int, because we will do calculations with the col value
-            if (col + shipsPlaced <= 9) {
-                var available = true;
-                for (var i = 0; i < (shipsPlaced + 1); i++) {
-                    if ($("#Y" + row + (col + i)).attr("class") != "empty"){
-                    available = false;
-                    }
-                } 
-                if (available === true) {
+            var col = $cell.attr("col");      
+            if(horizontal) {                            // ships need to be portrayed horizontal
+                var col = parseInt(col);                // needs to be parsed to an int, because we will do calculations with the value
+                if (col + shipsPlaced <= 9) {
+                    var available = true;
                     for (var i = 0; i < (shipsPlaced + 1); i++) {
-                        $("#Y" + row + (col + i)).addClass("selected");
+                        if ($("#Y" + row + (col + i)).attr("class") != "empty"){
+                            available = false;
+                        }
                     } 
+                    if (available === true) {
+                        for (var i = 0; i < (shipsPlaced + 1); i++) {
+                            $("#Y" + row + (col + i)).addClass("selected");
+                        } 
+                    }
+                }
+            } else {                                    // ships need to be portrayed vertically
+                var row = parseInt(row);                // needs to be parsed to an int, because we will do calculations with the value
+                if (row + shipsPlaced <= 9) {
+                    var available = true;
+                    for (var i = 0; i < (shipsPlaced + 1); i++) {
+                        if ($("#Y" + (row + i) + col).attr("class") != "empty"){
+                            available = false;
+                        }
+                    } 
+                    if (available === true) {
+                        for (var i = 0; i < (shipsPlaced + 1); i++) {
+                            $("#Y" + (row + i) + col).addClass("selected");
+                        } 
+                    }
                 }
             }
         }, function() {            
@@ -85,6 +106,11 @@ var main = function() {
             for (var i = 0; i < (shipsPlaced + 1); i++) {
                 $("#Y" + row + col).removeClass("selected");
                 col++;
+            }
+            col = $cell.attr("col");
+            for(var x = 0; x < (shipsPlaced + 1); x++) {
+                $("#Y" + row + col).removeClass("selected");
+                row++;
             }
     });
     

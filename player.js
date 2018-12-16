@@ -39,18 +39,31 @@ var player = function()  {
         return count;
     };
 
-    // allows to place a ship on the board, given it's leftmost coordinate and length
-    this.placeShip = function (row, col) {
+    // allows to place a ship on the board, given it's leftmost coordinate, length and orientation
+    this.placeShip = function (row, col, horizontal) {
         if(this.shipsPlaced <= 4) {
-            for(let i = 0; i < (this.shipsPlaced + 1); i++) {
-                if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col)+i] >= 1) {
-                    return false;
+            if(horizontal) {                    // ship needs to be placed horizontally
+                for(let i = 0; i < (this.shipsPlaced + 1); i++) {
+                    if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col) + i] >= 1) {
+                        return false;
+                    }
                 }
-            }
-            for(let x = 0; x < (this.shipsPlaced + 1); x++) {
-                this.board[row][parseInt(col) + x] = 1;
-                var aShip = this.ships[this.shipsPlaced];
-                aShip.addCell(row, (parseInt(col) + x));                
+                for(let x = 0; x < (this.shipsPlaced + 1); x++) {
+                    this.board[row][parseInt(col) + x] = 1;
+                    var aShip = this.ships[this.shipsPlaced];
+                    aShip.addCell(row, (parseInt(col) + x));                
+                }
+            } else {                            // ship needs to be placed vertically
+                for(let i = 0; i < (this.shipsPlaced + 1); i++) {
+                    if (((parseInt(row) + i) >= 10) || this.board[parseInt(row) + i][col] >= 1) {
+                        return false;
+                    }
+                }
+                for(let x = 0; x < (this.shipsPlaced + 1); x++) {
+                    this.board[parseInt(row) + x][col] = 1;
+                    var aShip = this.ships[this.shipsPlaced];
+                    aShip.addCell(parseInt(row) + x, col);                
+                }
             }
             this.shipsPlaced++;
             //console.log(this.board);

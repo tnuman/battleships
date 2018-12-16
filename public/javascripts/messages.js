@@ -25,7 +25,8 @@
     exports.O_SHIP_PLACED = {
         type: exports.T_SHIP_PLACED,
         row: null,
-        col: null
+        col: null,
+        horizontal: null
     };
     //exports.S_SHIP_PLACED does not exist, as data needs to be set
 
