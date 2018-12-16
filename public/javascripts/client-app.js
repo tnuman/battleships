@@ -1,6 +1,7 @@
 var main = function() {
     "use strict";
-    var socket = new WebSocket("ws://https://serene-earth-15493.herokuapp.com/");
+    var HOST = location.origin.replace(/^http/, 'ws');
+    var socket = new WebSocket(HOST);
     
     var shipsPlaced = 0;
     var myTurn = false;
