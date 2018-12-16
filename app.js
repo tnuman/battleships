@@ -257,6 +257,6 @@ wss.on("connection", function connection(ws) {
     });
 });
 
-server.listen(port);
+server.listen(process.env.PORT || 3000);
 
 module.exports = app;
