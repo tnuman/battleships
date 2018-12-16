@@ -4,10 +4,9 @@ var ship = function (length) {
     this.coveredCells = [];
     this.addCell = function (row, col) {
         if (this.coveredCells) {
-            this.coveredCells.push(row + "," + col); // row and col handled as a string (concatenated), no addition
+            this.coveredCells.push(row + "," + col);
         } else {
-            this.coveredCells = [row + "," + col]; // een lege array kun je niet pushen, 
-                                            // dus als de array nog leeg is moet je een nieuw array maken met 1 element
+            this.coveredCells = [row + "," + col]; // error when pushing values to an empty array, so make a new array for the first cell.
         }
     };
     this.covers = function (row, col) {

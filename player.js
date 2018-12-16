@@ -39,26 +39,30 @@ var player = function()  {
         return count;
     };
 
-    // allows to place a ship on the board, given it's leftmost coordinate, length and orientation
+    // allows to place a ship on the board, given it's leftmost/top coordinate, length and orientation
     this.placeShip = function (row, col, horizontal) {
         if(this.shipsPlaced <= 4) {
             if(horizontal) {                    // ship needs to be placed horizontally
+                // check if the ship fits on the gameboard and all covered cells are still empty
                 for(let i = 0; i < (this.shipsPlaced + 1); i++) {
                     if (((parseInt(col) + i) >= 10) || this.board[row][parseInt(col) + i] >= 1) {
                         return false;
                     }
                 }
+                // add the ship to the gameboard and the covered cells to the ship
                 for(let x = 0; x < (this.shipsPlaced + 1); x++) {
                     this.board[row][parseInt(col) + x] = 1;
                     var aShip = this.ships[this.shipsPlaced];
                     aShip.addCell(row, (parseInt(col) + x));                
                 }
             } else {                            // ship needs to be placed vertically
+                // check if the ship fits on the gameboard and all covered cells are still empty
                 for(let i = 0; i < (this.shipsPlaced + 1); i++) {
                     if (((parseInt(row) + i) >= 10) || this.board[parseInt(row) + i][col] >= 1) {
                         return false;
                     }
                 }
+                // add the ship to the gameboard and the covered cells to the ship
                 for(let x = 0; x < (this.shipsPlaced + 1); x++) {
                     this.board[parseInt(row) + x][col] = 1;
                     var aShip = this.ships[this.shipsPlaced];
@@ -66,7 +70,6 @@ var player = function()  {
                 }
             }
             this.shipsPlaced++;
-            //console.log(this.board);
             return true;
         }
         
@@ -87,7 +90,6 @@ var player = function()  {
                     var aShip = this.ships[i];
                     if (aShip.covers(row, col)) {
                         aShip.hits++;
-                        //console.log(aShip);
                         if (aShip.hasSunk() === true){
                             for (let j = 0; j < aShip.length; j++) {
                                 var cell = aShip.coveredCells[j].split(",");       // an array with row and col value
