@@ -220,40 +220,42 @@ wss.on("connection", function connection(ws) {
 
         console.log("Player " + con.id + " disconnected");
         let gameObj = websockets[con.id]; 
-            
-        // if there was only onen player and he left, set the status to back to 0 joint
-        if(gameObj.isValidTransition(gameObj.gameState, "0 JOINT")) {
-            gameObj.socketA = null;
-            gameObj.setStatus("0 JOINT");
-        }
+        
+        if (gameObj != undefined) {
+            // if there was only one player and he left, set the status to back to 0 joint
+            if(gameObj.isValidTransition(gameObj.gameState, "0 JOINT")) {
+                gameObj.socketA = null;
+                gameObj.setStatus("0 JOINT");
+            }
 
-        // try to abort the game, else the game is already completed
-        if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
-            // update the 'shipsSunk'-stat and set the status to 'ABORTED'
-            gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft(); 
-            gameStats.gamesOngoing--; 
-            gameObj.setStatus("ABORTED");
+            // try to abort the game, else the game is already completed
+            if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
+                // update the 'shipsSunk'-stat and set the status to 'ABORTED'
+                gameStats.shipsSunk += 10 - gameObj.playerA.shipsLeft() - gameObj.playerB.shipsLeft(); 
+                gameStats.gamesOngoing--; 
+                gameObj.setStatus("ABORTED");
 
-            if (con === gameObj.socketA) {
-                try {
-                    gameObj.socketB.send(messages.S_GAME_ABORTED);
-                    gameObj.socketB.close(); 
-                    gameObj.socketB = null;
-                }
-                catch(e){
-                    console.log("Player B closing: " + e);
-                }    
-            } else {
-                try {
-                    gameObj.socketA.send(messages.S_GAME_ABORTED);
-                    gameObj.socketA.close();
-                    gameObj.socketA = null;
-                }
-                catch(e){
-                    console.log("Player A closing: "+ e);
-                }
-            }        
-        } 
+                if (con === gameObj.socketA) {
+                    try {
+                        gameObj.socketB.send(messages.S_GAME_ABORTED);
+                        gameObj.socketB.close(); 
+                        gameObj.socketB = null;
+                    }
+                    catch(e){
+                        console.log("Player B closing: " + e);
+                    }    
+                } else {
+                    try {
+                        gameObj.socketA.send(messages.S_GAME_ABORTED);
+                        gameObj.socketA.close();
+                        gameObj.socketA = null;
+                    }
+                    catch(e){
+                        console.log("Player A closing: "+ e);
+                    }
+                }        
+            }
+        }  
     });
 });
 
